@@ -34,6 +34,8 @@ def load_config_file() -> dict:
 
 CONFIG = load_config_file()
 
+db_file = CONFIG.get('db_file')
+
 api_url = CONFIG.get('api_url')
 api_tenant = CONFIG.get('api_tenant')
 

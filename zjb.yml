@@ -8,6 +8,12 @@
 #
 
 #
+# Application settings
+#
+db_file: 'zjb.sqlite3'
+
+
+#
 # Zuul API settings
 #
 api_url: 'https://zuul.example.com/api/'
