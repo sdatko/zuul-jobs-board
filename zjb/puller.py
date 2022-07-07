@@ -5,6 +5,7 @@ import os
 import requests
 
 from zjb import config
+from zjb import db
 from zjb.utils import match
 
 
@@ -14,6 +15,8 @@ builds_endpoint = os.path.join(api_base, 'builds')
 jobs_endpoint = os.path.join(api_base, 'jobs')
 pipelines_endpoint = os.path.join(api_base, 'pipelines')
 projects_endpoint = os.path.join(api_base, 'projects')
+
+session = db.session()
 
 
 def get_branches() -> list:
@@ -80,13 +83,28 @@ def get_last_build(project=None, branch=None, pipeline=None, job=None) -> dict:
         return {}
 
 
-def main() -> None:
+def update() -> None:
     branches = get_branches()
     jobs = get_jobs()
     pipelines = get_pipelines()
     projects = get_projects()
 
-    print(len(branches), branches)
-    print(len(jobs), jobs)
-    print(len(pipelines), pipelines)
-    print(len(projects), projects)
+    for project in projects:
+        for branch in branches:
+            for pipeline in pipelines:
+                for job in jobs:
+                    build = get_last_build(project, branch, pipeline, job)
+
+                    db.Build.create_or_update(
+                        session, project, branch, pipeline, job,
+                        build.get('uuid', ''),
+                        build.get('result', '---'),
+                        build.get('log_url', ''),
+                        build.get('voting', False)
+                    )
+
+
+def main() -> None:
+    print('Updating results database...')
+    update()
+    print('Done.')
