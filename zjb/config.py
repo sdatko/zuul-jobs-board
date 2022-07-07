@@ -34,6 +34,7 @@ def load_config_file() -> dict:
 
 CONFIG = load_config_file()
 
+app_port = CONFIG.get('app_port')
 db_file = CONFIG.get('db_file')
 
 api_url = CONFIG.get('api_url')

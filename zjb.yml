@@ -10,6 +10,7 @@
 #
 # Application settings
 #
+app_port: 5000
 db_file: 'zjb.sqlite3'
 
 
