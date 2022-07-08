@@ -111,17 +111,20 @@
             main table tbody td a.status:hover {
                 opacity: 0.75;
             }
-            main table tbody td a.ok {
+            main table tbody td a.SUCCESS {
                 background-color: rgba(152, 151, 26, 0.5);
                 border-color: #98971a;
                 color: #79740e;
             }
-            main table tbody td a.ko {
+            main table tbody td a.FAILURE {
                 background-color: rgba(204, 36, 29, 0.5);
                 border-color: #cc241d;
                 color: #9d0006;
             }
-            main table tbody td a.un {
+            main table tbody td a.ABORTED,
+            main table tbody td a.NODE_FAILURE,
+            main table tbody td a.RETRY,
+            main table tbody td a.RETRY_LIMIT {
                 background-color: rgba(215, 153, 33, 0.5);
                 border-color: #d79921;
                 color: #b57614;
@@ -149,48 +152,29 @@
             </a>
         </header>
         <main class="index">
+            {%- for table in results %}
             <table>
-                <caption><span>Pipeline / Branch</span></caption>
+                <caption><span>{{ table }}</span></caption>
                 <thead>
                     <tr>
                         <th>Project</th>
-                        <th>Job1</th>
-                        <th>Job2</th>
-                        <th>Job3</th>
-                        <th>Job4</th>
+                        {%- for job in results.values() | first | items | first | last %}
+                        <th>{{ job.name }}</th>
+                        {%- endfor -%}
                     </tr>
                 </thead>
                 <tbody>
+                    {%- for project, project_jobs in results[table].items() %}
                     <tr>
-                        <td>cinder</td>
-                        <td><a class="status">---</a></td>
-                        <td><a class="status ko">FAILURE</a></td>
-                        <td><a class="status ok">SUCCESS</a></td>
-                        <td><a class="status un">RETRY_FAIL</a></td>
+                        <td>{{ project }}</td>
+                        {%- for job in project_jobs %}
+                        <td><a class="status {{ job.status }}"{% if job.URL %} href="{{ job.URL }}"{% endif %}>{{ job.status }}</a></td>
+                        {%- endfor -%}
                     </tr>
-                    <tr>
-                        <td>glance</td>
-                        <td><a class="status">---</a></td>
-                        <td><a class="status ko">FAILURE</a></td>
-                        <td><a class="status ok">SUCCESS</a></td>
-                        <td><a class="status un">RETRY_FAIL</a></td>
-                    </tr>
-                    <tr>
-                        <td>swift</td>
-                        <td><a class="status">---</a></td>
-                        <td><a class="status ko">FAILURE</a></td>
-                        <td><a class="status ok">SUCCESS</a></td>
-                        <td><a class="status un">RETRY_FAIL</a></td>
-                    </tr>
-                    <tr>
-                        <td>nova</td>
-                        <td><a class="status">---</a></td>
-                        <td><a class="status ko">FAILURE</a></td>
-                        <td><a class="status ok">SUCCESS</a></td>
-                        <td><a class="status un">RETRY_FAIL</a></td>
-                    </tr>
+                    {%- endfor -%}
                 </tbody>
             </table>
+            {%- endfor -%}
         </main>
         <footer>
             <p>
