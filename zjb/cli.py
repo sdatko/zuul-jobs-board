@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import multiprocessing
 import signal
 
@@ -12,11 +13,28 @@ def handle_sigterm(*args):
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description='''
+        Utility to run Zuul Jobs Board processes (puller, server or both).
+    ''')
+    parser.add_argument('-p', '--puller', dest='puller',
+                        default=False, action='store_true',
+                        help='run the puller process')
+    parser.add_argument('-s', '--server', dest='server',
+                        default=False, action='store_true',
+                        help='run the server process')
+
+    args = parser.parse_args()
+
+    if not args.puller and not args.server:
+        parser.print_help()
+
     puller_process = multiprocessing.Process(target=puller.main)
     server_process = multiprocessing.Process(target=server.main)
 
-    puller_process.start()
-    server_process.start()
+    if args.puller:
+        puller_process.start()
+    if args.server:
+        server_process.start()
 
     signal.signal(signal.SIGTERM, handle_sigterm)
 
