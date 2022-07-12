@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import time
 
 import requests
 
@@ -15,8 +16,6 @@ builds_endpoint = os.path.join(api_base, 'builds')
 jobs_endpoint = os.path.join(api_base, 'jobs')
 pipelines_endpoint = os.path.join(api_base, 'pipelines')
 projects_endpoint = os.path.join(api_base, 'projects')
-
-session = db.session()
 
 
 def get_branches() -> list:
@@ -89,6 +88,8 @@ def update() -> None:
     pipelines = get_pipelines()
     projects = get_projects()
 
+    session = db.session()
+
     for project in projects:
         for branch in branches:
             for pipeline in pipelines:
@@ -103,8 +104,12 @@ def update() -> None:
                         build.get('voting', False)
                     )
 
+    session.close()
+
 
 def main() -> None:
-    print('Updating results database...')
-    update()
-    print('Done.')
+    while True:
+        print('Updating results database...')
+        update()
+        print('Done.')
+        time.sleep(60 * 60 * 6)
