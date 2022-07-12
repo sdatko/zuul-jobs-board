@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <title>Zuul Jobs Board</title>
-        <style type="text/css">
+        <style>
             body {
                 font-family: sans-serif;
                 font-size: 16px;
@@ -25,7 +25,6 @@
             footer {
                 border-top: 1px dotted #000;
                 margin: 0 auto;
-                width: 50.0em;
             }
 
             header a,
@@ -60,8 +59,11 @@
                 border-collapse: separate;
                 border-radius: 0.25em;
                 border-spacing: 0.1em;
-                margin: 0 auto;
+                margin: 0 auto 5.0em;
                 padding: 0.5em;
+            }
+            main table:last-child {
+                margin-bottom: 0;
             }
             main table caption {
                 caption-side: top;
@@ -79,17 +81,17 @@
                 padding: 0.25em 0.25em 0;
             }
             main table thead:before {
-                  content: '';
-                  display: block;
-                  margin-top: 0.25em;
+                content: '';
+                display: block;
+                margin-top: 0.25em;
             }
             main table thead th {
                 border-bottom: 3px double #000;
             }
             main table thead:after {
-                  content: '';
-                  display: block;
-                  margin-top: 0.25em;
+                content: '';
+                display: block;
+                margin-top: 0.25em;
             }
             main table tbody td {
                 min-width: 10.0em;
