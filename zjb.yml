@@ -34,3 +34,9 @@ branches: ~
 jobs: ~
 pipelines: ~
 projects: ~
+
+
+#
+# Output groups
+#
+groups: ~

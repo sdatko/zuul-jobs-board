@@ -51,7 +51,7 @@ def get_results() -> dict:
 @app.route("/", methods=['GET'])
 def index():
     results = get_results()
-    return template.render(results=results)
+    return template.render(results=results, groups=config.groups)
 
 
 def main() -> None:

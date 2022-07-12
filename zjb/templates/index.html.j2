@@ -19,6 +19,12 @@
                 margin: 0;
                 padding: 1.0em;
             }
+            nav {
+                border-bottom: 1px dotted #000;
+                margin: 0 auto;
+                padding: 1.0em;
+                text-align: center;
+            }
             main {
                 margin: 5.0em auto;
             }
@@ -48,6 +54,20 @@
                 padding-right: 10px;
             }
 
+            nav label {
+                cursor: pointer;
+                margin-left: 4.0em;
+            }
+            nav label:first-child {
+                margin-left: 0;
+            }
+            nav select {
+                width: 12.0em;
+            }
+            nav input {
+                width: 20.0em;
+            }
+
             main a,
             main a:visited {
                 border-bottom: 1px dotted #000;
@@ -67,6 +87,7 @@
             }
             main table caption {
                 caption-side: top;
+                cursor: pointer;
                 font-size: 150%;
                 margin: 0 1.0em;
                 margin-bottom: -1px;
@@ -80,6 +101,9 @@
                 display: inline-block;
                 padding: 0.25em 0.25em 0;
             }
+            main table caption:hover span {
+                text-decoration: underline;
+            }
             main table thead:before {
                 content: '';
                 display: block;
@@ -87,6 +111,8 @@
             }
             main table thead th {
                 border-bottom: 3px double #000;
+                min-width: 10.0em;
+                text-align: center;
             }
             main table thead:after {
                 content: '';
@@ -95,8 +121,11 @@
             }
             main table tbody td {
                 min-width: 10.0em;
+                overflow: hidden;
                 padding: 0.25em;
                 text-align: center;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
             main table tbody td a.status {
                 border-width: 2px;
@@ -131,6 +160,11 @@
                 border-color: #d79921;
                 color: #b57614;
             }
+            main table tfoot td {
+                min-width: 10.0em;
+                padding: 0.25em;
+                text-align: center;
+            }
 
             footer a,
             footer a:visited {
@@ -145,6 +179,70 @@
                 padding: 0;
             }
         </style>
+        <script>
+{% if groups %}
+            const groups = {{ groups }};
+{% else %}
+            const groups = {};
+{% endif %}
+
+            let selected = 'ANY';
+            let searched = '';
+
+            function filterRows() {
+                let rows = document.querySelectorAll('table tbody tr');
+                for(const row of rows) {
+                    let project = row.firstElementChild.textContent;
+                    let text = row.textContent.replace(/\s\s+/g, ' ').toLowerCase();
+
+                    if(
+                       (selected == 'ANY' || groups[selected].includes(project))
+                       &&
+                       (searched == '' || text.match(searched))
+                    ) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function(event) {
+                let select = document.getElementById('group');
+                let search = document.getElementById('search');
+
+                for(const group in groups) {
+                    const option = document.createElement('option');
+                    const text = document.createTextNode(group);
+                    option.appendChild(text);
+                    select.appendChild(option);
+                }
+
+                select.addEventListener('change', function(event) {
+                    selected = event.target.value;
+                    filterRows();
+                });
+
+                search.addEventListener('input', function(event) {
+                    searched = event.target.value.toLowerCase();
+                    filterRows();
+                });
+
+                let tables = document.querySelectorAll('table');
+                for(const table of tables) {
+                    table.width = table.offsetWidth;
+                }
+
+                let captions = document.querySelectorAll('table caption');
+                for(const caption of captions) {
+                    caption.addEventListener('click', function(event) {
+                        for(const element of caption.parentElement.querySelectorAll('tbody, thead, tfoot')) {
+                            element.hidden = ! element.hidden;
+                        }
+                    });
+                }
+            });
+        </script>
     </head>
     <body>
         <header>
@@ -153,6 +251,14 @@
                 <h2>– neatly presented statuses</h2>
             </a>
         </header>
+        <nav>
+            <label for="group">Group:</label>
+            <select name="group" id="group">
+                <option>ANY</option>
+            </select>
+            <label for="search">Search:</label>
+            <input type="search" name="search" id="search" autocomplete="off" />
+        </nav>
         <main class="index">
             {%- for table in results %}
             <table>
@@ -175,6 +281,11 @@
                     </tr>
                     {%- endfor -%}
                 </tbody>
+                <tfoot hidden="hidden">
+                    <tr>
+                        <td colspan="{{ results.values() | first | items | first | last | length + 1 }}">↕ (content collapsed) ↕</td>
+                    </tr>
+                </tfoot>
             </table>
             {%- endfor -%}
         </main>

@@ -45,3 +45,4 @@ projects = CONFIG.get('projects')
 pipelines = CONFIG.get('pipelines')
 
 branches = CONFIG.get('branches')
+groups = CONFIG.get('groups')
