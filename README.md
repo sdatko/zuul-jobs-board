@@ -1,5 +1,7 @@
 # Zuul Jobs Board
 
+![](https://github.com/sdatko/zuul-jobs-board/workflows/tests/badge.svg)
+
 Neatly presented statuses of periodic Zuul jobs.
 
 
