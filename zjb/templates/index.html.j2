@@ -56,16 +56,22 @@
 
             nav label {
                 cursor: pointer;
-                margin-left: 4.0em;
+                margin-right: 3.0em;
             }
-            nav label:first-child {
-                margin-left: 0;
+            nav label:last-child {
+                margin-right: 0;
             }
             nav select {
-                width: 12.0em;
+                width: 10.0em;
             }
-            nav input {
-                width: 20.0em;
+            nav input#search {
+                width: 18.0em;
+            }
+            nav input#tested {
+                width: 5.0em;
+            }
+            nav input#untested {
+                width: 5.0em;
             }
 
             main a,
@@ -247,6 +253,20 @@
                         }
                     });
                 }
+
+                let tested = document.getElementById('tested');
+                tested.addEventListener('click', function(event) {
+                    search.value = '(SUCCESS|FAILURE|RETRY|ABORT)';
+                    searched = search.value.toLowerCase();
+                    filterRows();
+                });
+
+                let untested = document.getElementById('untested');
+                untested.addEventListener('click', function(event) {
+                    search.value = '^((?!(SUCCESS|FAILURE|RETRY|ABORT)).)*$';
+                    searched = search.value.toLowerCase();
+                    filterRows();
+                });
             });
         </script>
     </head>
@@ -258,12 +278,21 @@
             </a>
         </header>
         <nav>
-            <label for="group">Group:</label>
-            <select name="group" id="group">
-                <option>ANY</option>
-            </select>
-            <label for="search">Search:</label>
-            <input type="search" name="search" id="search" autocomplete="off" />
+            <label for="group">
+                Group:
+                <select name="group" id="group">
+                    <option>ANY</option>
+                </select>
+            </label>
+            <label for="search">
+                Search:
+                <input type="search" name="search" id="search" autocomplete="off" />
+            </label>
+            <label>
+                Filters:
+                <input type="button" id="tested" value="Tested" />
+                <input type="button" id="untested" value="Untested" />
+            </label>
         </nav>
         <main class="index">
             {%- for table in results %}
