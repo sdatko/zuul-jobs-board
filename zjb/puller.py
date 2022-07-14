@@ -101,7 +101,7 @@ def update() -> None:
                         build.get('uuid', ''),
                         build.get('result', '---'),
                         build.get('log_url', ''),
-                        build.get('voting', False)
+                        build.get('voting', True)
                     )
 
     session.close()

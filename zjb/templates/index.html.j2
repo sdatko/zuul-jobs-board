@@ -160,6 +160,12 @@
                 border-color: #d79921;
                 color: #b57614;
             }
+            main table tbody td a.voting {
+                border-style: solid;
+            }
+            main table tbody td a.non-voting {
+                border-style: dotted;
+            }
             main table tfoot td {
                 min-width: 10.0em;
                 padding: 0.25em;
@@ -276,7 +282,7 @@
                     <tr>
                         <td>{{ project }}</td>
                         {%- for job in project_jobs %}
-                        <td><a class="status {{ job.status }}"{% if job.URL %} href="{{ job.URL }}"{% endif %}>{{ job.status }}</a></td>
+                        <td><a class="status {{ job.status }} {% if job.voting %}voting{% else %}non-voting{% endif %}"{% if job.URL %} href="{{ job.URL }}"{% endif %}>{{ job.status }}</a></td>
                         {%- endfor -%}
                     </tr>
                     {%- endfor -%}

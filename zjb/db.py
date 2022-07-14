@@ -2,6 +2,7 @@
 
 import os
 
+from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import create_engine
 from sqlalchemy import DateTime
@@ -35,7 +36,7 @@ class Build(Base):
     uuid = Column(String)
     status = Column(String)
     URL = Column(String)
-    voting = Column(String)
+    voting = Column(Boolean)
     updated = Column(DateTime(timezone=True), onupdate=func.now())
 
     def __init__(self, project, branch, pipeline, job,
