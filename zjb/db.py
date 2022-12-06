@@ -37,7 +37,9 @@ class Build(Base):
     status = Column(String)
     URL = Column(String)
     voting = Column(Boolean)
-    updated = Column(DateTime(timezone=True), onupdate=func.now())
+    updated = Column(DateTime(timezone=True),
+                     default=func.now(),
+                     onupdate=func.now())
 
     def __init__(self, project, branch, pipeline, job,
                  uuid, status, URL, voting):
