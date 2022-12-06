@@ -83,11 +83,26 @@ def get_last_build(project=None, branch=None, pipeline=None, job=None) -> dict:
         return {}
 
 
+def progress(current: int = 0, total: int = 100):
+    length = 40
+    boxes = int(current / total * length) * '#'
+    togo = (length - len(boxes)) * '-'
+
+    print(f'\r[{boxes}{togo}] {current}/{total}', end='')
+
+    if current >= total:
+        print()
+
+
 def update() -> None:
     branches = get_branches()
     jobs = get_jobs()
     pipelines = get_pipelines()
     projects = get_projects()
+
+    i = 0
+    end = len(branches) * len(jobs) * len(pipelines) * len(projects)
+    progress(i, end)
 
     session = db.session()
 
@@ -110,6 +125,9 @@ def update() -> None:
                         build.get('log_url', ''),
                         build.get('voting', True)
                     )
+
+                    i += 1
+                    progress(i, end)
 
     session.close()
 
