@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
 import os
 import time
 
@@ -95,6 +96,12 @@ def update() -> None:
             for pipeline in pipelines:
                 for job in jobs:
                     build = get_last_build(project, branch, pipeline, job)
+                    date = build.get('start_time', '')
+
+                    if date and (datetime.now()
+                                 - datetime.fromisoformat(date)).days > 14:
+                        build['result'] = '---'
+                        build['log_url'] = ''
 
                     db.Build.create_or_update(
                         session, project, branch, pipeline, job,
