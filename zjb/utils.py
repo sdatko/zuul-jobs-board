@@ -39,3 +39,14 @@ def match(string: str, specifier: str) -> bool:
     else:
         regex = re.compile(specifier)
         return bool(regex.fullmatch(string))
+
+
+def progress(current: int = 0, total: int = 100):
+    length = 40
+    boxes = int(current / total * length) * '#'
+    togo = (length - len(boxes)) * '-'
+
+    print(f'\r[{boxes}{togo}] {current}/{total}', end='')
+
+    if current >= total:
+        print()

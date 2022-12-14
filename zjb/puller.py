@@ -9,6 +9,7 @@ import requests
 from zjb import config
 from zjb import db
 from zjb.utils import match
+from zjb.utils import progress
 
 
 api_base = os.path.join(config.api_url, 'tenant', config.api_tenant)
@@ -81,17 +82,6 @@ def get_last_build(project=None, branch=None, pipeline=None, job=None) -> dict:
         return resp.json().pop()
     except IndexError:
         return {}
-
-
-def progress(current: int = 0, total: int = 100):
-    length = 40
-    boxes = int(current / total * length) * '#'
-    togo = (length - len(boxes)) * '-'
-
-    print(f'\r[{boxes}{togo}] {current}/{total}', end='')
-
-    if current >= total:
-        print()
 
 
 def update() -> None:
