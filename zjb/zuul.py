@@ -16,51 +16,52 @@ pipelines_endpoint = os.path.join(api_base, 'pipelines')
 projects_endpoint = os.path.join(api_base, 'projects')
 
 
-def get_branches() -> list:
+def get_branches(filter: list) -> list:
     # NOTE(sdatko): There is no easy way to get list of tracked branches
     #               from Zuul, or at least I was unable to find anything
     #               better than processing the builds list (which is not
     #               really reliable, as we cannot get all builds easily).
-    #               For the time being, lets have this coming from config.
-    return config.branches
+    #               For the time being, lets have this coming from filter.
+    return filter
 
 
-def get_jobs() -> list:
+def get_jobs(filter: list | None) -> list:
     resp = requests.get(jobs_endpoint)
     jobs = [job.get('name') for job in resp.json()]
 
-    if config.jobs:
+    if filter:
         jobs = [job for job in jobs
                 if any(match(job, job_specifier)
-                       for job_specifier in config.jobs)]
+                       for job_specifier in filter)]
 
     return jobs
 
 
-def get_pipelines() -> list:
+def get_pipelines(filter: list | None) -> list:
     resp = requests.get(pipelines_endpoint)
     pipelines = [pipeline.get('name') for pipeline in resp.json()]
 
-    if config.pipelines:
+    if filter:
         pipelines = [pipeline for pipeline in pipelines
                      if any(match(pipeline, pipeline_specifier)
-                            for pipeline_specifier in config.pipelines)]
+                            for pipeline_specifier in filter)]
 
     return pipelines
 
 
-def get_projects() -> list:
+def get_projects(filter: list | None) -> list:
     resp = requests.get(projects_endpoint)
     projects = [project.get('name') for project in resp.json()]
 
-    if config.projects:
+    if filter:
         projects = [project for project in projects
                     if any(match(project, project_specifier)
-                           for project_specifier in config.projects)]
+                           for project_specifier in filter)]
 
     return projects
 
 
+# TODO: caching here will help with the same queries from multiple views
 def get_last_build(project=None, branch=None, pipeline=None, job=None) -> dict:
     params = {'limit': 1}
 

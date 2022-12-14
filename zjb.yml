@@ -22,18 +22,28 @@ api_tenant: 'tenant-name'
 
 
 #
-# Filtering options
+# Viewing options
 #
-# Specify a list of strings to filter for wanted results to display.
+# Specify lists of strings to filter for wanted results to fetch and display.
 # When string starts and ends with forward slash (/), it is treated
 # as a regular expression; otherwise an exact match of name is expected.
+# Value of `None` instead of list = do not filter (i.e. display everything).
 #
-# Default: None = do not filter (i.e. display everything).
+# NOTE: Branches *require* explicit names (not regular expressions)
+#       due to limitations of Zuul API (see zuul.py:get_branches()).
 #
-branches: ~
-jobs: ~
-pipelines: ~
-projects: ~
+views:
+  MyView:
+    pipelines:
+      - check
+    projects: ~  # None
+    branches:
+      master:
+        - openstack-tox-pep8
+        - /openstack-tox-py*/
+      stable/wallaby:
+        - openstack-tox-pep8
+        - openstack-tox-py38
 
 
 #

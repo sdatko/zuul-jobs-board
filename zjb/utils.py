@@ -41,6 +41,10 @@ def match(string: str, specifier: str) -> bool:
         return bool(regex.fullmatch(string))
 
 
+def any_match(string: str, specifiers: list) -> bool:
+    return any([match(string, specifier) for specifier in specifiers])
+
+
 def progress(current: int = 0, total: int = 100):
     length = 40
     boxes = int(current / total * length) * '#'

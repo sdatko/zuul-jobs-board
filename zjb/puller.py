@@ -13,11 +13,18 @@ from zjb.zuul import get_pipelines
 from zjb.zuul import get_projects
 
 
-def update() -> None:
-    branches = get_branches()
-    jobs = get_jobs()
-    pipelines = get_pipelines()
-    projects = get_projects()
+def update_for_view(name: str) -> None:
+    pipelines_filter = config.views[name].get('pipelines')
+    projects_filter = config.views[name].get('projects')
+    branches_filter = config.views[name].get('branches')
+    jobs_filter = [job
+                   for branch in config.views[name].get('branches').values()
+                   for job in branch]
+
+    pipelines = get_pipelines(pipelines_filter)
+    projects = get_projects(projects_filter)
+    branches = get_branches(branches_filter)
+    jobs = get_jobs(jobs_filter)
 
     i = 0
     end = len(branches) * len(jobs) * len(pipelines) * len(projects)
@@ -25,9 +32,9 @@ def update() -> None:
 
     session = db.session()
 
-    for project in projects:
-        for branch in branches:
-            for pipeline in pipelines:
+    for pipeline in pipelines:
+        for project in projects:
+            for branch in branches:
                 for job in jobs:
                     build = get_last_build(project, branch, pipeline, job)
                     date = build.get('start_time', '')
@@ -49,6 +56,12 @@ def update() -> None:
                     progress(i, end)
 
     session.close()
+
+
+def update() -> None:
+    for view in config.views:
+        print(view)
+        update_for_view(view)
 
 
 def main() -> None:

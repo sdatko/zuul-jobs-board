@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Zuul Jobs Board</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                font-size: 16px;
+                line-height: 150%;
+                margin: 0;
+                padding: 0;
+                overflow-y: scroll;
+            }
+
+            header {
+                background-color: #000;
+                color: #fff;
+                margin: 0;
+                padding: 1.0em;
+            }
+            nav {
+                border-bottom: 1px dotted #000;
+                margin: 0 auto;
+                padding: 1.0em;
+                text-align: center;
+            }
+            main {
+                margin: 5.0em auto;
+            }
+            footer {
+                border-top: 1px dotted #000;
+                margin: 0 auto;
+            }
+
+            header a,
+            header a:visited {
+                color: #fff;
+                text-decoration: none;
+            }
+            header h1 {
+                display: inline;
+                font-size: 200%;
+                margin: 0;
+                padding: 0;
+                padding-left: 10px;
+            }
+            header h2 {
+                display: inline;
+                font-size: 120%;
+                margin: 0;
+                margin-left: 1.0em;
+                padding: 0;
+                padding-right: 10px;
+            }
+
+            nav div {
+                display: inline-block;
+                margin-right: 3.0em;
+            }
+            nav div:last-child {
+                margin-right: 0;
+            }
+            nav label {
+                cursor: pointer;
+            }
+            nav select {
+                width: 10.0em;
+            }
+            nav input#search {
+                width: 18.0em;
+            }
+            nav input#failed {
+                width: 5.0em;
+            }
+            nav input#tested {
+                width: 5.0em;
+            }
+            nav input#untested {
+                width: 5.0em;
+            }
+
+            main a,
+            main a:visited {
+                border-bottom: 1px dotted #000;
+                color: #000;
+                text-decoration: none;
+            }
+            main div.views {
+                text-align: center;
+            }
+            main div.views ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+            }
+            main div.views ul li {
+                margin: 0;
+                margin-top: 0.5em;
+                padding: 0;
+            }
+            main div.views li a {
+                border: 1px solid #000;
+                border-radius: 1.0em;
+                display: inline-block;
+                padding: 1.0em;
+            }
+            main div.views li a:hover {
+                background-color: #eee;
+                text-decoration: underline;
+            }
+            main table {
+                border: 1px solid #000;
+                border-collapse: separate;
+                border-radius: 0.25em;
+                border-spacing: 0.1em;
+                margin: 0 auto 5.0em;
+                padding: 0.5em;
+            }
+            main table:last-child {
+                margin-bottom: 0;
+            }
+            main table caption {
+                caption-side: top;
+                cursor: pointer;
+                font-size: 150%;
+                margin: 0 1.0em;
+                margin-bottom: -1px;
+                text-align: left;
+            }
+            main table caption span {
+                background-color: #fff;
+                border: 1px solid #000;
+                border-bottom: none;
+                border-radius: 0.25em 0.25em 0 0;
+                display: inline-block;
+                padding: 0.25em 0.25em 0;
+            }
+            main table caption:hover span {
+                text-decoration: underline;
+            }
+            main table thead:before {
+                content: '';
+                display: block;
+                margin-top: 0.25em;
+            }
+            main table thead td {
+                border-left: 1px dotted #000;
+                border-right: 1px dotted #000;
+                font-weight: bold;
+                min-width: 10.0em;
+                text-align: center;
+            }
+            main table thead th {
+                border-bottom: 3px double #000;
+                border-left: 1px dotted #000;
+                border-right: 1px dotted #000;
+                min-width: 10.0em;
+                text-align: center;
+            }
+            main table thead td:first-child,
+            main table thead th:first-child {
+                border-left: 0;
+            }
+            main table thead td:last-child,
+            main table thead th:last-child {
+                border-right: 0;
+            }
+            main table thead:after {
+                content: '';
+                display: block;
+                margin-top: 0.25em;
+            }
+            main table tbody td {
+                min-width: 10.0em;
+                overflow: hidden;
+                padding: 0.25em;
+                text-align: center;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            main table tbody td a.status {
+                border-width: 2px;
+                border-style: solid;
+                border-radius: 0.25em;
+                cursor: pointer;
+                display: block;
+                font-weight: bold;
+
+                background-color: rgba(146, 131, 116, 0.5);
+                border-color: #928374;
+                color: #7c6f64;
+            }
+            main table tbody td a.status:hover {
+                opacity: 0.75;
+            }
+            main table tbody td a.SUCCESS {
+                background-color: rgba(152, 151, 26, 0.5);
+                border-color: #98971a;
+                color: #79740e;
+            }
+            main table tbody td a.FAILURE {
+                background-color: rgba(204, 36, 29, 0.5);
+                border-color: #cc241d;
+                color: #9d0006;
+            }
+            main table tbody td a.ABORTED,
+            main table tbody td a.NODE_FAILURE,
+            main table tbody td a.RETRY,
+            main table tbody td a.RETRY_LIMIT {
+                background-color: rgba(215, 153, 33, 0.5);
+                border-color: #d79921;
+                color: #b57614;
+            }
+            main table tbody td a.voting {
+                border-style: solid;
+            }
+            main table tbody td a.non-voting {
+                border-style: dotted;
+            }
+            main table tfoot td {
+                min-width: 10.0em;
+                padding: 0.25em;
+                text-align: center;
+            }
+
+            footer a,
+            footer a:visited {
+                border-bottom: 1px dotted #000;
+                color: #000;
+                text-decoration: none;
+            }
+            footer p {
+                font-size: 0.7em;
+                float: right;
+                margin: 1.0em;
+                padding: 0;
+            }
+        </style>
+        <script>
+{% if groups %}
+            const groups = {{ groups }};
+{% else %}
+            const groups = {};
+{% endif %}
+
+            let selected = 'ANY';
+            let searched = '';
+
+            function filterRows() {
+                let rows = document.querySelectorAll('table tbody tr');
+                for(const row of rows) {
+                    let project = row.firstElementChild.textContent;
+                    let text = row.textContent.replace(/\s\s+/g, ' ').toLowerCase();
+
+                    if(
+                       (selected == 'ANY' || groups[selected].includes(project))
+                       &&
+                       (searched == '' || text.match(searched))
+                    ) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function(event) {
+                let select = document.getElementById('group');
+                let search = document.getElementById('search');
+
+                for(const group in groups) {
+                    const option = document.createElement('option');
+                    const text = document.createTextNode(group);
+                    option.appendChild(text);
+                    select.appendChild(option);
+                }
+
+                select.addEventListener('change', function(event) {
+                    selected = event.target.value;
+                    filterRows();
+                });
+
+                search.addEventListener('input', function(event) {
+                    searched = event.target.value.toLowerCase();
+                    filterRows();
+                });
+
+                let tables = document.querySelectorAll('table');
+                for(const table of tables) {
+                    table.width = table.offsetWidth;
+                }
+
+                let captions = document.querySelectorAll('table caption');
+                for(const caption of captions) {
+                    caption.addEventListener('click', function(event) {
+                        for(const element of caption.parentElement.querySelectorAll('tbody, thead, tfoot')) {
+                            element.hidden = ! element.hidden;
+                        }
+                    });
+                }
+
+                let failed = document.getElementById('failed');
+                failed.addEventListener('click', function(event) {
+                    search.value = '(FAILURE|RETRY|ABORT)';
+                    searched = search.value.toLowerCase();
+                    filterRows();
+                });
+
+                let tested = document.getElementById('tested');
+                tested.addEventListener('click', function(event) {
+                    search.value = '(SUCCESS|FAILURE|RETRY|ABORT)';
+                    searched = search.value.toLowerCase();
+                    filterRows();
+                });
+
+                let untested = document.getElementById('untested');
+                untested.addEventListener('click', function(event) {
+                    search.value = '^((?!(SUCCESS|FAILURE|RETRY|ABORT)).)*$';
+                    searched = search.value.toLowerCase();
+                    filterRows();
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <header>
+            <a href="/">
+                <h1>Zuul Jobs Board</h1>
+                <h2>– neatly presented statuses</h2>
+            </a>
+        </header>
+        <nav>
+            <div>
+                <label for="group">Group:</label>
+                <select name="group" id="group">
+                    <option>ANY</option>
+                </select>
+            </div>
+            <div>
+                <label for="search">Search:</label>
+                <input type="search" name="search" id="search" autocomplete="off" />
+            </div>
+            <div>
+                <label>Quick:</label>
+                <input type="button" id="failed" value="Failed" />
+                <input type="button" id="tested" value="Tested" />
+                <input type="button" id="untested" value="Untested" />
+            </div>
+        </nav>
+        <main class="index">
+            {% block content %}
+            {% endblock %}
+        </main>
+        <footer>
+            <p>
+                &copy; 2022
+                –
+                <a href="https://github.com/sdatko/zuul-jobs-board">Zuul Jobs Board</a>
+                by
+                <a href="https://datko.pl/">Szymon Datko</a>
+            </p>
+        </footer>
+    </body>
+</html>

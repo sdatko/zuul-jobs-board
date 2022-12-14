@@ -1,0 +1,39 @@
+{% extends "base.html.j2" %}
+{% block content %}
+            {%- for pipeline in results %}
+            <table>
+                <caption><span>{{ name }} / {{ pipeline }}</span></caption>
+                <thead>
+                    <tr>
+                        <td><!-- --></td>
+                        {%- for branch in headers %}
+                        <td colspan="{{ headers[branch] | length }}">{{ branch }}</th>
+                        {%- endfor -%}
+                    </tr>
+                    <tr>
+                        <th>Project</th>
+                        {%- for branch in headers %}
+                            {%- for job in headers[branch] %}
+                        <th>{{ job }}</th>
+                            {%- endfor -%}
+                        {%- endfor -%}
+                    </tr>
+                </thead>
+                <tbody>
+                    {%- for project_name, project_jobs in results[pipeline].items() %}
+                    <tr>
+                        <td>{{ project_name }}</td>
+                        {%- for job in project_jobs %}
+                        <td><a class="status {{ job.status }} {% if job.voting %}voting{% else %}non-voting{% endif %}"{% if job.URL %} href="{{ job.URL }}"{% endif %}>{{ job.status }}</a></td>
+                        {%- endfor -%}
+                    </tr>
+                    {%- endfor -%}
+                </tbody>
+                <tfoot hidden="hidden">
+                    <tr>
+                        <td colspan="{{ results.values() | first | items | first | last | length + 1 }}">↕ (content collapsed) ↕</td>
+                    </tr>
+                </tfoot>
+            </table>
+            {%- endfor -%}
+{% endblock %}

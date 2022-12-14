@@ -40,9 +40,5 @@ db_file = CONFIG.get('db_file')
 api_url = CONFIG.get('api_url')
 api_tenant = CONFIG.get('api_tenant')
 
-jobs = CONFIG.get('jobs')
-projects = CONFIG.get('projects')
-pipelines = CONFIG.get('pipelines')
-
-branches = CONFIG.get('branches')
 groups = CONFIG.get('groups')
+views = CONFIG.get('views')
