@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+from typing import Optional
 
 import requests
 
@@ -25,7 +26,7 @@ def get_branches(filter: list) -> list:
     return filter
 
 
-def get_jobs(filter: list | None) -> list:
+def get_jobs(filter: Optional[list] = None) -> list:
     resp = requests.get(jobs_endpoint)
     jobs = [job.get('name') for job in resp.json()]
 
@@ -37,7 +38,7 @@ def get_jobs(filter: list | None) -> list:
     return jobs
 
 
-def get_pipelines(filter: list | None) -> list:
+def get_pipelines(filter: Optional[list] = None) -> list:
     resp = requests.get(pipelines_endpoint)
     pipelines = [pipeline.get('name') for pipeline in resp.json()]
 
@@ -49,7 +50,7 @@ def get_pipelines(filter: list | None) -> list:
     return pipelines
 
 
-def get_projects(filter: list | None) -> list:
+def get_projects(filter: Optional[list] = None) -> list:
     resp = requests.get(projects_endpoint)
     projects = [project.get('name') for project in resp.json()]
 
