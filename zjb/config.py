@@ -36,6 +36,7 @@ CONFIG = load_config_file()
 
 app_port = CONFIG.get('app_port')
 db_file = CONFIG.get('db_file')
+url_prefix = CONFIG.get('url_prefix')
 
 api_url = CONFIG.get('api_url')
 api_tenant = CONFIG.get('api_tenant')

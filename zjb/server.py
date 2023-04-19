@@ -81,7 +81,10 @@ def get_results(filters: dict) -> dict:
 
 @app.route("/", methods=['GET'])
 def index():
-    return template_index.render(views=config.views)
+    return template_index.render(
+        url_prefix=config.url_prefix,
+        views=config.views,
+    )
 
 
 @app.route("/<string:name>", methods=['GET'])
@@ -96,6 +99,7 @@ def view(name):
         groups=config.groups,
         headers=headers,
         results=results,
+        url_prefix=config.url_prefix,
     )
 
 
