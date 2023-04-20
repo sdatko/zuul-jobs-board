@@ -66,7 +66,17 @@ def update() -> None:
 
 def main() -> None:
     while True:
+        print('::', time.asctime(), '::')
         print('Updating results database...')
+        time_start = time.time()
         update()
+        time_end = time.time()
         print('Done.')
-        time.sleep(60 * 60 * 6)
+
+        time_took = time_end - time_start
+        time_left = config.pull_interval - time_took
+        print(f'Took: {time_took:.2f} seconds.')
+
+        if time_left > 0:
+            print(f'Going to sleep for {time_left:.2f} seconds...')
+            time.sleep(time_left)

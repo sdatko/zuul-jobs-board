@@ -36,6 +36,7 @@ CONFIG = load_config_file()
 
 app_port = CONFIG.get('app_port')
 db_file = CONFIG.get('db_file')
+pull_interval = CONFIG.get('pull_interval')
 url_prefix = CONFIG.get('url_prefix')
 
 api_url = CONFIG.get('api_url')
