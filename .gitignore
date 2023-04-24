@@ -3,4 +3,6 @@
 .eggs
 /*.egg-info/
 /.tox/
+/AUTHORS
+/ChangeLog
 __pycache__/
