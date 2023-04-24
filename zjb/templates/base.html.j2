@@ -232,9 +232,14 @@
             }
             footer p {
                 font-size: 0.7em;
-                float: right;
                 margin: 1.0em;
                 padding: 0;
+            }
+            footer p:first-child {
+                float: left;
+            }
+            footer p:last-child {
+                float: right;
             }
         </style>
         <script>
@@ -353,6 +358,9 @@
             {% endblock %}
         </main>
         <footer>
+            <p>
+                Last update: {{ last_update }}
+            </p>
             <p>
                 &copy; 2022–2023
                 –
