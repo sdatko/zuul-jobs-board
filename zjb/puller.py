@@ -5,6 +5,7 @@ import time
 
 from zjb import config
 from zjb import db
+from zjb.utils import any_match
 from zjb.utils import progress
 from zjb.zuul import get_branches
 from zjb.zuul import get_jobs
@@ -13,55 +14,83 @@ from zjb.zuul import get_pipelines
 from zjb.zuul import get_projects
 
 
-def update_for_view(name: str) -> None:
-    pipelines_filter = config.views[name].get('pipelines')
-    projects_filter = config.views[name].get('projects')
-    branches_filter = config.views[name].get('branches')
-    jobs_filter = [job
-                   for branch in config.views[name].get('branches').values()
-                   for job in branch]
+def find_buils_to_query() -> list:
+    builds_to_query = []
 
-    pipelines = get_pipelines(pipelines_filter)
-    projects = get_projects(projects_filter)
-    branches = get_branches(branches_filter)
-    jobs = get_jobs(jobs_filter)
+    for view in config.views:
+        pipelines_filter = config.views[view].get('pipelines')
+        projects_filter = config.views[view].get('projects')
+        branches_filter = config.views[view].get('branches')
+        all_jobs_filter = [
+            job
+            for branch in config.views[view].get('branches').values()
+            for job in branch
+        ]
 
+        pipelines = get_pipelines(pipelines_filter)
+        projects = get_projects(projects_filter)
+        branches = get_branches(branches_filter)
+        jobs = get_jobs(all_jobs_filter)
+
+        for pipeline in pipelines:
+            if pipelines_filter:
+                if not any_match(pipeline, pipelines_filter):
+                    continue
+
+            for project in projects:
+                if projects_filter:
+                    if not any_match(project, projects_filter):
+                        continue
+
+                for branch in branches:
+                    if branches_filter:
+                        if not any_match(branch, branches_filter):
+                            continue
+
+                    jobs_filter = config.views[view]['branches'][branch]
+                    for job in jobs:
+                        if jobs_filter:
+                            if not any_match(job, jobs_filter):
+                                continue
+
+                        builds_to_query.append(
+                            (pipeline, project, branch, job),
+                        )
+
+    return list(set(builds_to_query))
+
+
+def update(builds_to_query: list) -> None:
     i = 0
-    end = len(branches) * len(jobs) * len(pipelines) * len(projects)
+    end = len(builds_to_query)
     progress(i, end)
 
     session = db.session()
 
-    for pipeline in pipelines:
-        for project in projects:
-            for branch in branches:
-                for job in jobs:
-                    build = get_last_build(project, branch, pipeline, job)
-                    date = build.get('start_time', '')
+    for build_args in builds_to_query:
+        pipeline, project, branch, job = build_args
 
-                    if date and (datetime.now()
-                                 - datetime.fromisoformat(date)).days > 14:
-                        build['result'] = '---'
-                        build['log_url'] = ''
+        build = get_last_build(project, branch, pipeline, job)
+        date = build.get('start_time', '1970-01-01T00:00:00.000000')
 
-                    db.Build.create_or_update(
-                        session, project, branch, pipeline, job,
-                        build.get('uuid', ''),
-                        build.get('result', '---'),
-                        build.get('log_url', ''),
-                        build.get('voting', True)
-                    )
+        if (datetime.now() - datetime.fromisoformat(date)).days > 14:
+            build['uuid'] = ''
+            build['result'] = '---'
+            build['log_url'] = ''
+            build['voting'] = True
 
-                    i += 1
-                    progress(i, end)
+        db.Build.create_or_update(
+            session, project, branch, pipeline, job,
+            build.get('uuid', ''),
+            build.get('result', '---'),
+            build.get('log_url', ''),
+            build.get('voting', True),
+        )
+
+        i += 1
+        progress(i, end)
 
     session.close()
-
-
-def update() -> None:
-    for view in config.views:
-        print(view)
-        update_for_view(view)
 
 
 def main() -> None:
@@ -69,7 +98,8 @@ def main() -> None:
         print('::', time.asctime(), '::')
         print('Updating results database...')
         time_start = time.time()
-        update()
+        builds_to_query = find_buils_to_query()
+        update(builds_to_query)
         time_end = time.time()
         print('Done.')
 
