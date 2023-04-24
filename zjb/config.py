@@ -36,6 +36,7 @@ CONFIG = load_config_file()
 
 app_port = CONFIG.get('app_port')
 db_file = CONFIG.get('db_file')
+obsolete_days = CONFIG.get('obsolete_days')
 pull_interval = CONFIG.get('pull_interval')
 url_prefix = CONFIG.get('url_prefix')
 

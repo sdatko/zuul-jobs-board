@@ -71,9 +71,11 @@ def update(builds_to_query: list) -> None:
         pipeline, project, branch, job = build_args
 
         build = get_last_build(project, branch, pipeline, job)
-        date = build.get('start_time', '1970-01-01T00:00:00.000000')
+        build_date = datetime.fromisoformat(
+            build.get('start_time', '1970-01-01T00:00:00.000000')
+        )
 
-        if (datetime.now() - datetime.fromisoformat(date)).days > 14:
+        if (datetime.now() - build_date).days > config.obsolete_days:
             build['uuid'] = ''
             build['result'] = '---'
             build['log_url'] = ''
