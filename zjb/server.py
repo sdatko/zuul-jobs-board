@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from flask import abort
 from flask import Flask
+from flask import send_file
 from jinja2 import Environment
 from jinja2 import PackageLoader
 
@@ -123,6 +124,11 @@ def view(name):
         results=results,
         url_prefix=config.url_prefix,
     )
+
+
+@app.route("/db.sqlite3", methods=['GET'])
+def dumpdb():
+    return send_file(db.dbfile)
 
 
 def main() -> None:

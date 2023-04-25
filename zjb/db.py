@@ -16,7 +16,8 @@ from sqlalchemy.orm import sessionmaker
 from zjb import config
 
 
-engine = create_engine('sqlite:///' + os.path.expanduser(config.db_file))
+dbfile = os.path.abspath(os.path.expanduser(config.db_file))
+engine = create_engine('sqlite:///' + dbfile)
 session = sessionmaker(bind=engine)
 
 Base = declarative_base()
