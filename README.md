@@ -39,6 +39,15 @@ options:
 An example configuration file `zjb.yml` is provided in this repository.
 
 
+## Deployment
+
+See files in `deployment/` for Ansible playbook to setup dedicated CentOS host.
+
+It installs ZJB, along with Supervisor service and Nginx proxy for flexibility.
+
+Adjust `inventory.ini`, files and vars, then execute `run.sh` script.
+
+
 ## Development
 
 Dedicated tox environment called **run** can be used for development purposes.

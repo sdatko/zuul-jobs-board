@@ -1,0 +1,232 @@
+---
+- name: Deploy Zuul Jobs Board
+  any_errors_fatal: true
+  gather_facts: false
+  hosts: deployment_hosts
+  tasks:
+    #
+    # Check connection
+    #
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        delay: 0
+        sleep: 5
+        timeout: 300
+
+    - name: Attempt becoming root user
+      ansible.builtin.command:
+        cmd: id -u
+      register: id_output
+      become: true
+      changed_when: "'0' not in id_output.stdout"
+
+    - name: Ensure sudo works
+      ansible.builtin.assert:
+        that: id_output.stdout == '0'
+
+
+    #
+    # Configure host
+    #
+    - name: Install base system packages
+      ansible.builtin.dnf:
+        name:
+          - ca-certificates
+          - git
+          - python39
+          - python39-pip
+          - tmux  # for convenience
+          - vim  # for convenience
+        state: present
+      become: true
+
+    - name: Create ZJB user
+      ansible.builtin.user:
+        name: "{{ zjb_user }}"
+        home: "{{ zjb_home }}"
+        create_home: true
+        state: present
+      become: true
+
+    - name: Set motd
+      ansible.builtin.copy:
+        src: files/motd
+        dest: /etc/motd
+        mode: '0644'
+      become: true
+
+
+    #
+    # Setup Zuul Jobs Board
+    #
+    - name: Clone ZJB
+      ansible.builtin.git:
+        repo: "{{ zjb_repo }}"
+        dest: "{{ zjb_home }}/zuul-jobs-board"
+        clone: true
+        update: true
+        version: master
+      become: true
+      become_user: "{{ zjb_user }}"
+      register: zjb_repository
+
+    - name: Install ZJB in venv
+      ansible.builtin.pip:
+        name: "{{ zjb_home }}/zuul-jobs-board"
+        state: "present"
+        virtualenv: "{{ zjb_home }}/venv"
+        virtualenv_command: python3.9 -m venv
+      become: true
+      become_user: "{{ zjb_user }}"
+      notify: Restart Supervisor
+      when: zjb_repository is changed  # noqa: no-handler
+
+    - name: Copy ZJB configuration
+      ansible.builtin.copy:
+        src: files/zjb.yml
+        dest: "{{ zjb_home }}/.zjb.yml"
+        mode: '0644'
+      become: true
+      become_user: "{{ zjb_user }}"
+      notify: Restart Supervisor
+
+
+    #
+    # Setup Nginx service
+    #
+    - name: Install Nginx
+      ansible.builtin.dnf:
+        name: nginx
+        state: present
+      become: true
+
+    - name: Copy Nginx configuration
+      ansible.builtin.copy:
+        src: files/nginx.conf
+        dest: /etc/nginx/nginx.conf
+        mode: '0644'
+      become: true
+      notify: Restart Nginx
+
+    - name: Prepare http directory
+      ansible.builtin.file:
+        path: /home/http
+        state: directory
+        mode: '0755'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+      become: true
+
+    - name: Copy index.html
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /home/http/index.html
+        mode: '0644'
+
+    - name: Generate SELinux policy allow rules from logs of denied operations
+      ansible.builtin.shell:
+        cmd: >-
+          audit2allow -M allow-nginx-access-home-http << EOF
+
+          type=AVC msg=audit(1.111:123): avc:  denied  { read }
+          for  pid=12345 comm="nginx" name="index.html"
+          dev="vda1" ino=654321
+          scontext=system_u:system_r:httpd_t:s0
+          tcontext=unconfined_u:object_r:user_home_t:s0
+          tclass=file permissive=0
+
+          type=AVC msg=audit(2.222:456): avc:  denied  { open }
+          for  pid=12346 comm="nginx" path="/home/http/index.html"
+          dev="vda1" ino=654321
+          scontext=system_u:system_r:httpd_t:s0
+          tcontext=unconfined_u:object_r:user_home_t:s0
+          tclass=file
+          permissive=0
+
+          type=AVC msg=audit(3.333:789): avc:  denied  { name_connect }
+          for  pid=12347 comm="nginx" dest=5333
+          scontext=system_u:system_r:httpd_t:s0
+          tcontext=system_u:object_r:unreserved_port_t:s0
+          tclass=tcp_socket
+          permissive=0
+
+          EOF
+        chdir: /tmp
+        creates: /tmp/allow-nginx-access-home-http.pp
+      register: selinux_policy_module
+
+    - name: Install SELinux policy module
+      ansible.builtin.command:
+        cmd: semodule -i allow-nginx-access-home-http.pp
+        chdir: /tmp
+      become: true
+      changed_when: true
+      when: selinux_policy_module is changed  # noqa: no-handler
+
+    - name: Reload systemd configs
+      ansible.builtin.systemd:
+        daemon_reload: true
+      become: true
+
+    - name: Enable Nginx
+      ansible.builtin.systemd:
+        name: nginx.service
+        enabled: true
+        masked: false
+      become: true
+
+
+    #
+    # Setup Supervisor service
+    #
+    - name: Install Supervisor
+      ansible.builtin.pip:
+        name: supervisor
+        state: present
+        executable: pip3.9
+      become: true
+
+    - name: Copy Supervisor configuration
+      ansible.builtin.template:
+        src: files/supervisord.conf.j2
+        dest: /etc/supervisord.conf
+        mode: '0644'
+      become: true
+      notify: Restart Supervisor
+
+    - name: Copy Supervisor service
+      ansible.builtin.copy:
+        src: files/supervisord.service
+        dest: /etc/systemd/system/supervisord.service
+        mode: '0644'
+      become: true
+      notify: Restart Supervisor
+
+    - name: Reload systemd configs
+      ansible.builtin.systemd:
+        daemon_reload: true
+      become: true
+
+    - name: Enable Supervisor
+      ansible.builtin.systemd:
+        name: supervisord.service
+        enabled: true
+        masked: false
+      become: true
+
+
+  #
+  # Post actions
+  #
+  handlers:
+    - name: Restart Nginx
+      ansible.builtin.systemd:
+        name: nginx.service
+        state: restarted
+      become: true
+
+    - name: Restart Supervisor
+      ansible.builtin.systemd:
+        name: supervisord.service
+        state: restarted
+      become: true

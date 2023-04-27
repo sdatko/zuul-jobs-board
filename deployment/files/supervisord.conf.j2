@@ -1,0 +1,55 @@
+;
+; Supervisor config file
+;
+; For more information on the config file, please see:
+; http://supervisord.org/configuration.html
+;
+[unix_http_server]
+file=/tmp/supervisor.sock
+chmod=0744
+
+[supervisord]
+user=root
+directory=/tmp
+logfile=/tmp/supervisord.log
+logfile_maxbytes=50MB
+logfile_backups=10
+loglevel=info
+pidfile=/tmp/supervisord.pid
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///tmp/supervisor.sock
+
+
+;
+; Programs managed by Supervisor
+;
+[program:zjb-puller]
+command={{ zjb_home }}/venv/bin/zjb -p
+directory={{ zjb_home }}
+user={{ zjb_user }}
+autostart=true
+startsecs=3
+startretries=3
+autorestart=unexpected
+exitcodes=0
+redirect_stderr=true
+stdout_logfile=/tmp/zjb-puller.stdout
+stderr_logfile=NONE
+environment=SSL_CERT_FILE='/etc/pki/tls/certs/ca-bundle.crt',REQUESTS_CA_BUNDLE='/etc/pki/tls/certs/ca-bundle.crt'
+
+[program:zjb-server]
+command={{ zjb_home }}/venv/bin/zjb -s
+directory={{ zjb_home }}
+user={{ zjb_user }}
+autostart=true
+startsecs=3
+startretries=3
+autorestart=unexpected
+exitcodes=0
+redirect_stderr=true
+stdout_logfile=/tmp/zjb-server.stdout
+stderr_logfile=NONE
