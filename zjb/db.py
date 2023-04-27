@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import datetime
 import os
 
 from sqlalchemy import Boolean
@@ -41,6 +42,10 @@ class Build(Base):
     updated = Column(DateTime(timezone=True),
                      default=func.now(),
                      onupdate=func.now())
+    notes = Column(String, nullable=True)
+    notes_updated = Column(DateTime(timezone=True),
+                     default=func.now(),
+                     onupdate=func.now())
 
     def __init__(self, project, branch, pipeline, job,
                  uuid, status, URL, voting):
@@ -74,5 +79,31 @@ class Build(Base):
         session.commit()
         return instance
 
+    @classmethod
+    def update_note(cls, session, project, branch, pipeline, job, note):
+        instance = session.query(cls).filter_by(project=project,
+                                                branch=branch,
+                                                pipeline=pipeline,
+                                                job=job).one_or_none()
+        if instance:
+            instance.note = note
+            session.commit()
+        else:
+            print('Error: Can not find a record corresponding to the project: {}, branch: {}, pipeline: {}, job:{}'.format(
+                project, branch, pipeline, job, note))
+        return True
+
+    @classmethod
+    def get_note(cls, session, project, branch, pipeline, job, note):
+        instance = session.query(cls).filter_by(project=project,
+                                                branch=branch,
+                                                pipeline=pipeline,
+                                                job=job).one_or_none()
+        if instance:
+            return instance.note
+        else:
+            print('Error: Can not find a record corresponding to the project: {}, branch: {}, pipeline: {}, job:{}'.format(
+                project, branch, pipeline, job, note))
+        return ""
 
 Base.metadata.create_all(engine)

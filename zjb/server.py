@@ -81,6 +81,7 @@ def get_results(filters: dict) -> dict:
 
                     if build:
                         results[pipeline][project].append({
+                            'id': build.id,
                             'name': job,
                             'status': build.status,
                             'URL': build.URL,
@@ -88,6 +89,7 @@ def get_results(filters: dict) -> dict:
                         })
                     else:
                         results[pipeline][project].append({
+                            'id': '',
                             'name': '---',
                             'status': '---',
                             'URL': '',

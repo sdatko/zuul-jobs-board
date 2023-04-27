@@ -1,4 +1,5 @@
 {% extends "base.html.j2" %}
+
 {% block content %}
             {%- for pipeline in results %}
             <table>
@@ -24,7 +25,24 @@
                     <tr>
                         <td>{{ project_name }}</td>
                         {%- for job in project_jobs %}
-                        <td><a class="status {{ job.status }} {% if job.voting %}voting{% else %}non-voting{% endif %}"{% if job.URL %} href="{{ job.URL }}"{% endif %}>{{ job.status }}</a></td>
+                        <td>
+                            <!-- A modal dialog containing a form -->
+                            <dialog id="favDialog-{{ job.id }}">
+                            <form>
+                                <p>
+                                <textarea id="notes" name="notes" rows="4" cols="50">
+JOB NOTES: "{{ job.notes }}"
+                                </textarea>
+                                </p>
+                                <div>
+                                <button value="cancel" formmethod="dialog">Cancel</button>
+                                <button id="confirmBtn" value="default">Save</button>
+                                </div>
+                            </form>
+                            </dialog>
+                            <a class="status {{ job.status }} {% if job.voting %}voting{% else %}non-voting{% endif %}"{% if job.URL %} href="{{ job.URL }}"{% endif %}>{{ job.status }}</a>
+                            <button class="right-align-btn" id="showDialog" onclick=openModalDialog()>&#8942;</button>
+                        </td>
                         {%- endfor -%}
                     </tr>
                     {%- endfor -%}
@@ -36,4 +54,24 @@
                 </tfoot>
             </table>
             {%- endfor -%}
+
+            <script>
+                function openModalDialog(){
+                    const favDialog = document.getElementById('favDialog-{{ job.id }}');
+                    const confirmBtn = favDialog.querySelector('#confirmBtn');
+                    const textArea = favDialog.querySelector('notes');
+
+                    confirmBtn.addEventListener('click', (event) => {
+                        event.preventDefault(); // We don't want to submit this fake form
+                        favDialog.close(textArea.value);
+                    });
+
+                    favDialog.showModal();
+
+                    
+                }
+
+
+            </script>
+
 {% endblock %}
