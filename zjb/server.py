@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from flask import abort
 from flask import Flask
+from flask import request
 from flask import send_file
 from jinja2 import Environment
 from jinja2 import PackageLoader
@@ -101,8 +102,11 @@ def get_results(filters: dict) -> dict:
 def index():
     last_update = get_last_update()
 
+    query = request.args.get('q')
+
     return template_index.render(
         last_update=last_update,
+        query=query,
         url_prefix=config.url_prefix,
         views=config.views,
     )
@@ -113,6 +117,8 @@ def view(name):
     if name not in config.views:
         abort(404)
 
+    query = request.args.get('q')
+
     results, headers = get_results(config.views[name])
     last_update = get_last_update()
 
@@ -121,6 +127,7 @@ def view(name):
         groups=config.groups,
         headers=headers,
         last_update=last_update,
+        query=query,
         results=results,
         url_prefix=config.url_prefix,
     )

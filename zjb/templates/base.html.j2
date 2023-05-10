@@ -270,6 +270,17 @@
                 }
             }
 
+            function updateURL() {
+                if(window.history.replaceState) {
+                    let url = window.location.origin + window.location.pathname;
+                    if(search.value) {
+                        url += '?q=' + search.value;
+                    }
+
+                    window.history.replaceState({}, '', url);
+                }
+            }
+
             document.addEventListener('DOMContentLoaded', function(event) {
                 let select = document.getElementById('group');
                 let search = document.getElementById('search');
@@ -289,6 +300,7 @@
                 search.addEventListener('input', function(event) {
                     searched = event.target.value.toLowerCase();
                     filterRows();
+                    updateURL();
                 });
 
                 let tables = document.querySelectorAll('table');
@@ -310,6 +322,7 @@
                     search.value = '(FAILURE|RETRY|ABORT)';
                     searched = search.value.toLowerCase();
                     filterRows();
+                    updateURL();
                 });
 
                 let tested = document.getElementById('tested');
@@ -317,6 +330,7 @@
                     search.value = '(SUCCESS|FAILURE|RETRY|ABORT)';
                     searched = search.value.toLowerCase();
                     filterRows();
+                    updateURL();
                 });
 
                 let untested = document.getElementById('untested');
@@ -324,7 +338,15 @@
                     search.value = '^((?!(SUCCESS|FAILURE|RETRY|ABORT)).)*$';
                     searched = search.value.toLowerCase();
                     filterRows();
+                    updateURL();
                 });
+
+                search.value = {{ query | tojson }};
+                if(search.value) {
+                    searched = search.value.toLowerCase();
+                    filterRows();
+                    updateURL();
+                }
             });
         </script>
     </head>
