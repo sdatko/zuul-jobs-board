@@ -62,7 +62,6 @@ def get_projects(filter: Optional[list] = None) -> list:
     return projects
 
 
-# TODO: caching here will help with the same queries from multiple views
 def get_last_build(project=None, branch=None, pipeline=None, job=None) -> dict:
     params = {'limit': 1}
 
