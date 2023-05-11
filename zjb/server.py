@@ -102,11 +102,8 @@ def get_results(filters: dict) -> dict:
 def index():
     last_update = get_last_update()
 
-    query = request.args.get('q')
-
     return template_index.render(
         last_update=last_update,
-        query=query,
         url_prefix=config.url_prefix,
         views=config.views,
     )

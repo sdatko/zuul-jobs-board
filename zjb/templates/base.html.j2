@@ -285,23 +285,60 @@
                 let select = document.getElementById('group');
                 let search = document.getElementById('search');
 
-                for(const group in groups) {
-                    const option = document.createElement('option');
-                    const text = document.createTextNode(group);
-                    option.appendChild(text);
-                    select.appendChild(option);
+                if(select) {
+                    for(const group in groups) {
+                        const option = document.createElement('option');
+                        const text = document.createTextNode(group);
+                        option.appendChild(text);
+                        select.appendChild(option);
+                    }
+
+                    select.addEventListener('change', function(event) {
+                        selected = event.target.value;
+                        filterRows();
+                    });
                 }
 
-                select.addEventListener('change', function(event) {
-                    selected = event.target.value;
-                    filterRows();
-                });
+                if(search) {
+                    search.addEventListener('input', function(event) {
+                        searched = event.target.value.toLowerCase();
+                        filterRows();
+                        updateURL();
+                    });
 
-                search.addEventListener('input', function(event) {
-                    searched = event.target.value.toLowerCase();
-                    filterRows();
-                    updateURL();
-                });
+                    let failed = document.getElementById('failed');
+                    failed.addEventListener('click', function(event) {
+                        search.value = '(FAILURE|RETRY|ABORT)';
+                        searched = search.value.toLowerCase();
+                        filterRows();
+                        updateURL();
+                    });
+
+                    let tested = document.getElementById('tested');
+                    tested.addEventListener('click', function(event) {
+                        search.value = '(SUCCESS|FAILURE|RETRY|ABORT)';
+                        searched = search.value.toLowerCase();
+                        filterRows();
+                        updateURL();
+                    });
+
+                    let untested = document.getElementById('untested');
+                    untested.addEventListener('click', function(event) {
+                        search.value = '^((?!(SUCCESS|FAILURE|RETRY|ABORT)).)*$';
+                        searched = search.value.toLowerCase();
+                        filterRows();
+                        updateURL();
+                    });
+
+                    {% if query -%}
+                    search.value = {{ query | tojson }};
+                    if(search.value) {
+                        searched = search.value.toLowerCase();
+                        filterRows();
+                        updateURL();
+                    }
+                    {%- endif %}
+                }
 
                 let tables = document.querySelectorAll('table');
                 for(const table of tables) {
@@ -315,37 +352,6 @@
                             element.hidden = ! element.hidden;
                         }
                     });
-                }
-
-                let failed = document.getElementById('failed');
-                failed.addEventListener('click', function(event) {
-                    search.value = '(FAILURE|RETRY|ABORT)';
-                    searched = search.value.toLowerCase();
-                    filterRows();
-                    updateURL();
-                });
-
-                let tested = document.getElementById('tested');
-                tested.addEventListener('click', function(event) {
-                    search.value = '(SUCCESS|FAILURE|RETRY|ABORT)';
-                    searched = search.value.toLowerCase();
-                    filterRows();
-                    updateURL();
-                });
-
-                let untested = document.getElementById('untested');
-                untested.addEventListener('click', function(event) {
-                    search.value = '^((?!(SUCCESS|FAILURE|RETRY|ABORT)).)*$';
-                    searched = search.value.toLowerCase();
-                    filterRows();
-                    updateURL();
-                });
-
-                search.value = {{ query | tojson }};
-                if(search.value) {
-                    searched = search.value.toLowerCase();
-                    filterRows();
-                    updateURL();
                 }
             });
         </script>
