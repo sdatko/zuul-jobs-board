@@ -35,6 +35,7 @@ class Build(Base):
     pipeline = Column(String)
     job = Column(String)
     uuid = Column(String)
+    date = Column(DateTime(timezone=True), nullable=True)
     status = Column(String)
     URL = Column(String)
     voting = Column(Boolean)
@@ -43,19 +44,20 @@ class Build(Base):
                      onupdate=func.now())
 
     def __init__(self, project, branch, pipeline, job,
-                 uuid, status, URL, voting):
+                 uuid, date, status, URL, voting):
         self.project = project
         self.branch = branch
         self.pipeline = pipeline
         self.job = job
         self.uuid = uuid
+        self.date = date
         self.status = status
         self.URL = URL
         self.voting = voting
 
     @classmethod
     def create_or_update(cls, session, project, branch, pipeline, job,
-                         uuid, status, URL, voting):
+                         uuid, date, status, URL, voting):
         instance = session.query(cls).filter_by(project=project,
                                                 branch=branch,
                                                 pipeline=pipeline,
@@ -63,12 +65,13 @@ class Build(Base):
 
         if instance:
             instance.uuid = uuid
+            instance.date = date
             instance.status = status
             instance.URL = URL
             instance.voting = voting
         else:
             instance = cls(project, branch, pipeline, job,
-                           uuid, status, URL, voting)
+                           uuid, date, status, URL, voting)
             session.add(instance)
 
         session.commit()

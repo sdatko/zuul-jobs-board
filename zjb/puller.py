@@ -71,19 +71,22 @@ def update(builds_to_query: list) -> None:
         pipeline, project, branch, job = build_args
 
         build = get_last_build(project, branch, pipeline, job)
-        build_date = datetime.fromisoformat(
-            build.get('start_time', '1970-01-01T00:00:00.000000')
-        )
 
-        if (datetime.now() - build_date).days > config.obsolete_days:
-            build['uuid'] = ''
-            build['result'] = '---'
-            build['log_url'] = ''
-            build['voting'] = True
+        if build.get('uuid') and build.get('start_time'):
+            build['start_time'] = datetime.fromisoformat(
+                build.get('start_time')
+            )
+
+            days_passed = (datetime.now() - build['start_time']).days
+
+            if days_passed > config.obsolete_days:
+                build['result'] = '---'
+                build['voting'] = True
 
         db.Build.create_or_update(
             session, project, branch, pipeline, job,
             build.get('uuid', ''),
+            build.get('start_time'),
             build.get('result', '---'),
             build.get('log_url', ''),
             build.get('voting', True),
