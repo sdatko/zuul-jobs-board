@@ -4,7 +4,7 @@
                 <h1>Select view</h1>
                 <ul>
                     {%- for view in views | sort %}
-                    <li><a href="{{ url_prefix }}{{ view }}">{{ view }}</a></li>
+                    <li><a href="{{ url_prefix }}view/{{ view }}">{{ view }}</a></li>
                     {%- endfor -%}
                 </ul>
             </div>

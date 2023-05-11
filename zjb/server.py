@@ -83,7 +83,7 @@ def index():
     )
 
 
-@app.route("/<string:name>", methods=['GET'])
+@app.route("/view/<string:name>", methods=['GET'])
 def view(name):
     if name not in config.views:
         abort(404)
