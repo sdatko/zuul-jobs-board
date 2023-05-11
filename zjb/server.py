@@ -21,23 +21,6 @@ template_index = j2env.get_template('index.html.j2')
 template_results = j2env.get_template('results.html.j2')
 
 
-def get_last_update() -> str:
-    session = db.session()
-
-    last_update = (
-        session
-        .query(db.Build.updated)
-        .order_by(db.Build.updated.desc())
-        .first()
-    )
-
-    if last_update:
-        last_update = last_update[0]
-
-    session.close()
-    return last_update
-
-
 def get_results(filters: dict) -> dict:
     session = db.session()
     pipelines = [v for (v, ) in session.query(db.Build.pipeline).distinct()]
@@ -100,7 +83,7 @@ def get_results(filters: dict) -> dict:
 
 @app.route("/", methods=['GET'])
 def index():
-    last_update = get_last_update()
+    last_update = db.get_last_update()
 
     return template_index.render(
         last_update=last_update,
@@ -117,7 +100,7 @@ def view(name):
     query = request.args.get('q')
 
     results, headers = get_results(config.views[name])
-    last_update = get_last_update()
+    last_update = db.get_last_update()
 
     return template_results.render(
         name=name,

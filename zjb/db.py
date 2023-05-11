@@ -76,3 +76,17 @@ class Build(Base):
 
 
 Base.metadata.create_all(engine)
+
+
+def get_last_update() -> str:
+    with session() as s:
+        last_update = (
+            s.query(Build.updated)
+             .order_by(Build.updated.desc())
+             .first()
+        )
+
+    if last_update:
+        last_update = last_update[0]
+
+    return last_update
