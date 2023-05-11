@@ -236,11 +236,42 @@
                 text-align: center;
             }
 
+            div.overlay {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 5;
+                height: 100%;
+                width: 100%;
+                visibility: hidden;
+                backdrop-filter: blur(2px) grayscale(0.5) sepia(0.1);
+            }
+            div.overlay.visible {
+                visibility: visible;
+            }
+            div.details-box {
+                background: #ffffff;
+                border: 1px solid #000000;
+                padding: 1.0em;
+                position: relative;
+            }
             div.details {
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 text-align: left;
+            }
+            div.details p.id {
+                margin: 0;
+                padding: 0.5em;
+                position: absolute;
+                right: 0;
+                top: 0;
             }
             div.details strong {
                 border-bottom: 1px solid black;
@@ -313,6 +344,13 @@
             div.details div {
                 display: flex;
                 justify-content: space-between;
+            }
+            div.details div span {
+                font-size: 80%;
+                margin-left: 1.0em;
+            }
+            div.details div span code {
+                font-weight: bold;
             }
             div.details div div.hfill {
                 flex-grow: 100;
@@ -447,6 +485,17 @@
                 }, 3000);
             }
 
+            document.addEventListener('keydown', function(event) {
+                const isNotCombinedKey = !(event.ctrlKey || event.altKey || event.shiftKey);
+                if (event.key === 'Escape' && isNotCombinedKey) {
+                    let overlays = document.querySelectorAll('div.overlay.visible');
+                    for(const overlay of overlays) {
+                        overlay.classList.remove('visible');
+                        overlay.firstElementChild.firstElementChild.reset();
+                    }
+                }
+            });
+
             document.addEventListener('DOMContentLoaded', function(event) {
                 let select = document.getElementById('group');
                 let search = document.getElementById('search');
@@ -517,6 +566,69 @@
                         for(const element of caption.parentElement.querySelectorAll('tbody, thead, tfoot')) {
                             element.hidden = ! element.hidden;
                         }
+                    });
+                }
+
+                let links = document.querySelectorAll('main table td a.status');
+                for(const link of links) {
+                    link.addEventListener('click', function(event) {
+                        let overlay = event.currentTarget.nextElementSibling;
+                        overlay.classList.add('visible');
+
+                        event.preventDefault();
+                        event.stopPropagation();
+                        return false;
+                    });
+                }
+
+                let forms = document.querySelectorAll('main table form');
+                for(const form of forms) {
+                    form.addEventListener('submit', function(event) {
+                        const formdata = new FormData(event.target);
+                        const text = formdata.get('notes');
+                        const url = event.target.action;
+
+                        fetch(url, {
+                            method: 'POST',
+                            body: new URLSearchParams(formdata)
+                        })
+                        .then(function (response) {
+                            if(response.ok) {
+                                toast('Saved successfully');
+
+                                let overlay = event.target.parentElement.parentElement;
+                                overlay.classList.remove('visible');
+
+                                let textarea = event.target.querySelector('textarea');
+                                textarea.innerHTML = text;
+
+                                let status = overlay.previousElementSibling;
+                                let icon = status.querySelector('span.notes');
+
+                                if(text && !icon) {
+                                    let icon = document.createElement('span');
+                                    icon.className = 'notes';
+                                    status.appendChild(icon);
+                                } else if(!text && icon) {
+                                    status.removeChild(icon);
+                                }
+                            } else {
+                                console.error('Response not ok', response);
+                                toast('Error ' + response.status, 'err');
+                            }
+                        })
+                        .catch (function (error) {
+                            console.error('Request failed:', error);
+                            toast('Request failed: (see console)', 'err');
+                        });
+
+                        event.preventDefault();
+                        event.stopPropagation();
+                        return false;
+                    });
+                    form.addEventListener('reset', function(event) {
+                        let overlay = event.target.parentElement.parentElement;
+                        overlay.classList.remove('visible');
                     });
                 }
             });
