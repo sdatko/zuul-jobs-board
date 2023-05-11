@@ -39,12 +39,13 @@ class Build(Base):
     status = Column(String)
     URL = Column(String)
     voting = Column(Boolean)
+    notes = Column(String, nullable=True)
     updated = Column(DateTime(timezone=True),
                      default=func.now(),
                      onupdate=func.now())
 
     def __init__(self, project, branch, pipeline, job,
-                 uuid, date, status, URL, voting):
+                 uuid, date, status, URL, voting, notes=None):
         self.project = project
         self.branch = branch
         self.pipeline = pipeline
@@ -54,6 +55,7 @@ class Build(Base):
         self.status = status
         self.URL = URL
         self.voting = voting
+        self.notes = notes
 
     @classmethod
     def create_or_update(cls, session, project, branch, pipeline, job,
@@ -100,3 +102,9 @@ def get_result(ID: int) -> dict:
         result = s.query(Build).filter(Build.id == ID).one_or_none()
 
     return result
+
+
+def set_notes(ID, text) -> None:
+    with session() as s:
+        s.query(Build).filter(Build.id == ID).update({'notes': text})
+        s.commit()

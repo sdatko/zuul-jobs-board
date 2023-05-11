@@ -4,8 +4,10 @@ from collections import defaultdict
 
 from flask import abort
 from flask import Flask
+from flask import redirect
 from flask import request
 from flask import send_file
+from flask import url_for
 from jinja2 import Environment
 from jinja2 import PackageLoader
 
@@ -104,7 +106,7 @@ def view(name):
     )
 
 
-@app.route("/details", methods=['GET'])
+@app.route("/details", methods=['GET', 'POST'])
 def details():
     ID = request.args.get('id')
 
@@ -116,6 +118,10 @@ def details():
 
     if not result:
         abort(404)
+
+    if request.method == 'POST' and 'notes' in request.form:
+        db.set_notes(ID, text=request.form.get('notes'))
+        return redirect(url_for('details', id=ID))
 
     return template_details.render(
         last_update=last_update,
