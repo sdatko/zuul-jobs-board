@@ -93,3 +93,10 @@ def get_last_update() -> str:
         last_update = last_update[0]
 
     return last_update
+
+
+def get_result(ID: int) -> dict:
+    with session() as s:
+        result = s.query(Build).filter(Build.id == ID).one_or_none()
+
+    return result

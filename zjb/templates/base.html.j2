@@ -224,6 +224,78 @@
                 text-align: center;
             }
 
+            div.details {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: left;
+            }
+            div.details strong {
+                border-bottom: 1px solid black;
+                display: block;
+                margin: 0 auto;
+                text-align: center;
+            }
+            div.details table {
+                border: none;
+                margin: 0;
+            }
+            div.details table td {
+                text-align: left !important;
+                max-width: 15em !important;
+                min-width: auto !important;
+                width: 6em !important;
+            }
+            div.details table td:nth-child(2) {
+                width: 20em !important;
+            }
+            div.details table td:nth-child(4) {
+                width: 15em !important;
+            }
+            div.details table td.log {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            div.details table tbody td b.status {
+                border-width: 2px;
+                border-style: solid;
+                border-radius: 0.25em;
+                display: inline-block;
+                font-weight: bold;
+                min-width: 4.0em;
+                padding: 0 0.5em;
+                text-align: center;
+
+                background-color: rgba(146, 131, 116, 0.5);
+                border-color: #928374;
+                color: #7c6f64;
+            }
+            div.details table tbody td b.SUCCESS {
+                background-color: rgba(152, 151, 26, 0.5);
+                border-color: #98971a;
+                color: #79740e;
+            }
+            div.details table tbody td b.FAILURE {
+                background-color: rgba(204, 36, 29, 0.5);
+                border-color: #cc241d;
+                color: #9d0006;
+            }
+            div.details table tbody td b.ABORTED,
+            div.details table tbody td b.NODE_FAILURE,
+            div.details table tbody td b.RETRY,
+            div.details table tbody td b.RETRY_LIMIT {
+                background-color: rgba(215, 153, 33, 0.5);
+                border-color: #d79921;
+                color: #b57614;
+            }
+            div.details table tbody td b.voting {
+                border-style: solid;
+            }
+            div.details table tbody td b.non-voting {
+                border-style: dotted;
+            }
+
             footer a,
             footer a:visited {
                 border-bottom: 1px dotted #000;

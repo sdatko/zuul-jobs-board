@@ -18,6 +18,7 @@ app = Flask(__name__)
 
 j2env = Environment(loader=PackageLoader('zjb', 'templates'))
 template_index = j2env.get_template('index.html.j2')
+template_details = j2env.get_template('details.html.j2')
 template_results = j2env.get_template('results.html.j2')
 
 
@@ -99,6 +100,26 @@ def view(name):
         last_update=last_update,
         query=query,
         results=results,
+        url_prefix=config.url_prefix,
+    )
+
+
+@app.route("/details", methods=['GET'])
+def details():
+    ID = request.args.get('id')
+
+    if not ID:
+        abort(400)
+
+    result = db.get_result(ID)
+    last_update = db.get_last_update()
+
+    if not result:
+        abort(404)
+
+    return template_details.render(
+        last_update=last_update,
+        result=result,
         url_prefix=config.url_prefix,
     )
 
