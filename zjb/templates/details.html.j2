@@ -32,7 +32,18 @@
                     <td>Logs:</td>
                     <td class="log" colspan="3">{% if result.URL %}<a href="{{ result.URL }}">{{ result.URL }}</a>{% else %}(N/A){% endif %}</td>
                 </tr>
+                <tr>
+                    <td colspan="4">
+                        Notes:<br />
+                        <textarea id="notes" name="notes" rows="7" cols="80">{% if result.notes %}{{ result.notes }}{% endif %}</textarea>
+                    </td>
+                </tr>
             </table>
+            <div>
+                <button type="reset" value="reset">Reset</button>
+                <div class="hfill"><!-- --></div>
+                <button type="submit" value="submit">Save</button>
+            </div>
         </form>
     </div>
 {% endblock %}
