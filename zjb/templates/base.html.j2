@@ -179,6 +179,17 @@
                 text-overflow: ellipsis;
                 white-space: nowrap;
             }
+            main table tbody td span.notes {
+                border: none;
+                cursor: pointer;
+                position: absolute;
+                right: 0.1em;
+                top: auto;
+                bottom: auto;
+            }
+            main table tbody td span.notes:before {
+                content: '📝';
+            }
             main table tbody td a.status {
                 border-width: 2px;
                 border-style: solid;
@@ -186,6 +197,7 @@
                 cursor: pointer;
                 display: block;
                 font-weight: bold;
+                position: relative;
 
                 background-color: rgba(146, 131, 116, 0.5);
                 border-color: #928374;

@@ -46,7 +46,7 @@
                         {%- for result in project_results %}
                         <td>
                             {%- if result -%}
-                            <a class="status {{ result.status }} {% if result.voting %}voting{% else %}non-voting{% endif %}" href="{{ url_prefix }}details?id={{ result.id }}">{{ result.status }}</a>
+                            <a class="status {{ result.status }} {% if result.voting %}voting{% else %}non-voting{% endif %}" href="{{ url_prefix }}details?id={{ result.id }}">{{ result.status }}{% if result.notes -%}<span class="notes"></span>{%- endif %}</a>
                             {%- endif -%}
                         </td>
                         {%- endfor -%}
