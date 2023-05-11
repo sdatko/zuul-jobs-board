@@ -63,19 +63,9 @@ def get_results(filters: dict) -> dict:
                     ).one_or_none()
 
                     if build:
-                        results[pipeline][project].append({
-                            'name': job,
-                            'status': build.status,
-                            'URL': build.URL,
-                            'voting': build.voting,
-                        })
+                        results[pipeline][project].append(build.__dict__)
                     else:
-                        results[pipeline][project].append({
-                            'name': '---',
-                            'status': '---',
-                            'URL': '',
-                            'voting': True,
-                        })
+                        results[pipeline][project].append(None)
 
     session.close()
     return results, headers

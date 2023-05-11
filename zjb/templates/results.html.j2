@@ -40,11 +40,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {%- for project_name, project_jobs in results[pipeline].items() %}
+                    {%- for project_name, project_results in results[pipeline].items() %}
                     <tr>
                         <td>{{ project_name }}</td>
-                        {%- for job in project_jobs %}
-                        <td><a class="status {{ job.status }} {% if job.voting %}voting{% else %}non-voting{% endif %}"{% if job.URL %} href="{{ job.URL }}"{% endif %}>{{ job.status }}</a></td>
+                        {%- for result in project_results %}
+                        <td>
+                            {%- if result -%}
+                            <a class="status {{ result.status }} {% if result.voting %}voting{% else %}non-voting{% endif %}" href="{{ result.URL }}">{{ result.status }}</a>
+                            {%- endif -%}
+                        </td>
                         {%- endfor -%}
                     </tr>
                     {%- endfor -%}
