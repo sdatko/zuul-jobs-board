@@ -335,6 +335,62 @@
             footer p:last-child {
                 float: right;
             }
+
+            .toast {
+                background-color: #333333;
+                border: 2px solid #111111;
+                border-radius: 0.25em;
+                color: #ffffff;
+                font-size: 1.2em;
+                min-width: 20em;
+                padding: 1em;
+                text-align: center;
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                visibility: hidden;
+                z-index: 9;
+            }
+            .toast.ok {
+                background-color: rgba(152, 151, 26, 0.5);
+                border-color: #98971a;
+                color: #79740e;
+            }
+            .toast.err {
+                background-color: rgba(204, 36, 29, 0.5);
+                border-color: #cc241d;
+                color: #9d0006;
+            }
+            .toast.warn {
+                background-color: rgba(215, 153, 33, 0.5);
+                border-color: #d79921;
+                color: #b57614;
+            }
+            .toast.visible {
+                visibility: visible;
+                animation: toast-fadein 0.5s, toast-fadeout 0.5s 2.5s;
+            }
+            @keyframes toast-fadein {
+                from {
+                    bottom: 0;
+                    opacity: 0;
+                }
+                to {
+                    bottom: 30px;
+                    opacity: 1;
+                }
+            }
+            @keyframes toast-fadeout {
+                from {
+                    bottom: 30px;
+                    opacity: 1;
+                }
+                to {
+                    bottom: 0;
+                    opacity: 0;
+                }
+            }
         </style>
         <script>
 {% if groups %}
@@ -373,6 +429,22 @@
 
                     window.history.replaceState({}, '', url);
                 }
+            }
+
+            function toast(text, status='ok') {
+                let box = document.createElement('div');
+                box.classList.add('toast');
+
+                document.body.appendChild(box);
+
+                box.innerHTML = text;
+                box.classList.add(status);
+                box.classList.add('visible');
+
+                setTimeout(function() {
+                    box.classList.remove('visible');
+                    document.body.removeChild(box);
+                }, 3000);
             }
 
             document.addEventListener('DOMContentLoaded', function(event) {
