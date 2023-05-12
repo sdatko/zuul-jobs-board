@@ -1,0 +1,123 @@
+main div.details-box {
+    background: #ffffff;
+    border: 1px solid #000000;
+    padding: 1.0em;
+    position: relative;
+}
+
+main div.details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+}
+
+main div.details p.id {
+    margin: 0;
+    padding: 0.5em;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+main div.details strong {
+    border-bottom: 1px solid black;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+
+main div.details table {
+    border: none;
+    margin: 0;
+}
+
+main div.details table td {
+    overflow: hidden;
+    text-align: left !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 15em !important;
+    min-width: auto !important;
+    width: 6em !important;
+}
+
+main div.details table td:nth-child(2) {
+    width: 20em !important;
+}
+
+main div.details table td:nth-child(4) {
+    width: 15em !important;
+}
+
+main div.details table td.log {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+main div.details table tbody td b.status {
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 0.25em;
+    display: inline-block;
+    font-weight: bold;
+    min-width: 4.0em;
+    padding: 0 0.5em;
+    text-align: center;
+
+    background-color: rgba(146, 131, 116, 0.5);
+    border-color: #928374;
+    color: #7c6f64;
+}
+
+main div.details table tbody td b.SUCCESS {
+    background-color: rgba(152, 151, 26, 0.5);
+    border-color: #98971a;
+    color: #79740e;
+}
+
+main div.details table tbody td b.FAILURE {
+    background-color: rgba(204, 36, 29, 0.5);
+    border-color: #cc241d;
+    color: #9d0006;
+}
+
+main div.details table tbody td b.ABORTED,
+main div.details table tbody td b.NODE_FAILURE,
+main div.details table tbody td b.RETRY,
+main div.details table tbody td b.RETRY_LIMIT {
+    background-color: rgba(215, 153, 33, 0.5);
+    border-color: #d79921;
+    color: #b57614;
+}
+
+main div.details table tbody td b.voting {
+    border-style: solid;
+}
+
+main div.details table tbody td b.non-voting {
+    border-style: dotted;
+}
+
+main div.details table td textarea {
+    width: 99%;
+}
+
+main div.details div {
+    display: flex;
+    justify-content: space-between;
+}
+
+main div.details div span {
+    font-size: 80%;
+    margin-left: 1.0em;
+}
+
+main div.details div span code {
+    font-weight: bold;
+}
+
+main div.details div main div.hfill {
+    flex-grow: 100;
+}

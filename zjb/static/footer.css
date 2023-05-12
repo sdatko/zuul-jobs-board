@@ -1,0 +1,20 @@
+footer a,
+footer a:visited {
+    border-bottom: 1px dotted #000;
+    color: #000;
+    text-decoration: none;
+}
+
+footer p {
+    font-size: 0.7em;
+    margin: 1.0em;
+    padding: 0;
+}
+
+footer p:first-child {
+    float: left;
+}
+
+footer p:last-child {
+    float: right;
+}
