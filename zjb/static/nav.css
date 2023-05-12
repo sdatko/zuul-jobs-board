@@ -1,0 +1,32 @@
+nav div {
+    display: inline-block;
+    margin-right: 3.0em;
+}
+
+nav div:last-child {
+    margin-right: 0;
+}
+
+nav label {
+    cursor: pointer;
+}
+
+nav select {
+    width: 10.0em;
+}
+
+nav input#search {
+    width: 18.0em;
+}
+
+nav input#failed {
+    width: 5.0em;
+}
+
+nav input#tested {
+    width: 5.0em;
+}
+
+nav input#untested {
+    width: 5.0em;
+}

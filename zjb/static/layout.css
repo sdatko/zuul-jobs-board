@@ -1,0 +1,41 @@
+body {
+    font-family: sans-serif;
+    font-size: 16px;
+    line-height: 150%;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+}
+
+header {
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 1.0em;
+}
+
+nav {
+    border-bottom: 1px dotted #000;
+    margin: 0 auto;
+    padding: 1.0em;
+    text-align: center;
+}
+
+main {
+    margin: 5.0em auto;
+}
+
+footer {
+    border-top: 1px dotted #000;
+    margin: 0 auto;
+}
+
+a, a:visited {
+    border-bottom: 1px dotted #000;
+    color: #000;
+    cursor: pointer;
+    text-decoration: none;
+}
+a:hover {
+    border-bottom: 1px solid #000;
+}

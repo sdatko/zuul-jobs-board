@@ -1,0 +1,22 @@
+header a,
+header a:visited {
+    color: #fff;
+    text-decoration: none;
+}
+
+header h1 {
+    display: inline;
+    font-size: 200%;
+    margin: 0;
+    padding: 0;
+    padding-left: 10px;
+}
+
+header h2 {
+    display: inline;
+    font-size: 120%;
+    margin: 0;
+    margin-left: 1.0em;
+    padding: 0;
+    padding-right: 10px;
+}
