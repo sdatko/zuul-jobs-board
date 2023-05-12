@@ -137,12 +137,12 @@
                     {%- endif %}
                 }
 
-                let tables = document.querySelectorAll('table');
+                let tables = document.querySelectorAll('table.view');
                 for(const table of tables) {
                     table.width = table.offsetWidth;
                 }
 
-                let captions = document.querySelectorAll('table caption');
+                let captions = document.querySelectorAll('table.view caption');
                 for(const caption of captions) {
                     caption.addEventListener('click', function(event) {
                         for(const element of caption.parentElement.querySelectorAll('tbody, thead, tfoot')) {
