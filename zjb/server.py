@@ -5,11 +5,10 @@ from collections import defaultdict
 from flask import abort
 from flask import Flask
 from flask import redirect
+from flask import render_template
 from flask import request
 from flask import send_file
 from flask import url_for
-from jinja2 import Environment
-from jinja2 import PackageLoader
 
 from zjb import config
 from zjb import db
@@ -17,11 +16,6 @@ from zjb.utils import any_match
 
 
 app = Flask(__name__)
-
-j2env = Environment(loader=PackageLoader('zjb', 'templates'))
-template_index = j2env.get_template('index.html.j2')
-template_details = j2env.get_template('details.html.j2')
-template_results = j2env.get_template('results.html.j2')
 
 
 def get_results(filters: dict) -> dict:
@@ -78,7 +72,8 @@ def get_results(filters: dict) -> dict:
 def index():
     last_update = db.get_last_update()
 
-    return template_index.render(
+    return render_template(
+        'index.html.j2',
         last_update=last_update,
         url_prefix=config.url_prefix,
         views=config.views,
@@ -95,7 +90,8 @@ def view(name):
     results, headers = get_results(config.views[name])
     last_update = db.get_last_update()
 
-    return template_results.render(
+    return render_template(
+        'results.html.j2',
         name=name,
         groups=config.groups,
         headers=headers,
@@ -123,7 +119,8 @@ def details():
         db.set_notes(ID, text=request.form.get('notes'))
         return redirect(url_for('details', id=ID))
 
-    return template_details.render(
+    return render_template(
+        'details.html.j2',
         last_update=last_update,
         result=result,
         url_prefix=config.url_prefix,
