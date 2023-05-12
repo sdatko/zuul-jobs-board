@@ -1,4 +1,4 @@
-main table {
+main table.view {
     border: 1px solid #000;
     border-collapse: separate;
     border-radius: 0.25em;
@@ -7,11 +7,11 @@ main table {
     padding: 0.5em;
 }
 
-main table:last-child {
+main table.view:last-child {
     margin-bottom: 0;
 }
 
-main table caption {
+main table.view caption {
     caption-side: top;
     cursor: pointer;
     font-size: 150%;
@@ -20,7 +20,7 @@ main table caption {
     text-align: left;
 }
 
-main table caption span {
+main table.view caption span {
     background-color: #fff;
     border: 1px solid #000;
     border-bottom: none;
@@ -29,17 +29,17 @@ main table caption span {
     padding: 0.25em 0.25em 0;
 }
 
-main table caption:hover span {
+main table.view caption:hover span {
     text-decoration: underline;
 }
 
-main table thead:before {
+main table.view thead:before {
     content: '';
     display: block;
     margin-top: 0.25em;
 }
 
-main table thead td {
+main table.view thead td {
     border-left: 1px dotted #000;
     border-right: 1px dotted #000;
     font-weight: bold;
@@ -47,7 +47,7 @@ main table thead td {
     text-align: center;
 }
 
-main table thead th {
+main table.view thead th {
     border-bottom: 3px double #000;
     border-left: 1px dotted #000;
     border-right: 1px dotted #000;
@@ -55,23 +55,23 @@ main table thead th {
     text-align: center;
 }
 
-main table thead td:first-child,
-main table thead th:first-child {
+main table.view thead td:first-child,
+main table.view thead th:first-child {
     border-left: 0;
 }
 
-main table thead td:last-child,
-main table thead th:last-child {
+main table.view thead td:last-child,
+main table.view thead th:last-child {
     border-right: 0;
 }
 
-main table thead:after {
+main table.view thead:after {
     content: '';
     display: block;
     margin-top: 0.25em;
 }
 
-main table tbody td {
+main table.view tbody td {
     min-width: 10.0em;
     overflow: hidden;
     padding: 0.25em;
@@ -80,7 +80,7 @@ main table tbody td {
     white-space: nowrap;
 }
 
-main table tbody td span.notes {
+main table.view tbody td span.notes {
     border: none;
     cursor: pointer;
     position: absolute;
@@ -89,11 +89,11 @@ main table tbody td span.notes {
     bottom: auto;
 }
 
-main table tbody td span.notes:before {
+main table.view tbody td span.notes:before {
     content: '📝';
 }
 
-main table tbody td a.status {
+main table.view tbody td a.status {
     border-width: 2px;
     border-style: solid;
     border-radius: 0.25em;
@@ -107,40 +107,40 @@ main table tbody td a.status {
     color: #7c6f64;
 }
 
-main table tbody td a.status:hover {
+main table.view tbody td a.status:hover {
     opacity: 0.75;
 }
 
-main table tbody td a.SUCCESS {
+main table.view tbody td a.SUCCESS {
     background-color: rgba(152, 151, 26, 0.5);
     border-color: #98971a;
     color: #79740e;
 }
 
-main table tbody td a.FAILURE {
+main table.view tbody td a.FAILURE {
     background-color: rgba(204, 36, 29, 0.5);
     border-color: #cc241d;
     color: #9d0006;
 }
 
-main table tbody td a.ABORTED,
-main table tbody td a.NODE_FAILURE,
-main table tbody td a.RETRY,
-main table tbody td a.RETRY_LIMIT {
+main table.view tbody td a.ABORTED,
+main table.view tbody td a.NODE_FAILURE,
+main table.view tbody td a.RETRY,
+main table.view tbody td a.RETRY_LIMIT {
     background-color: rgba(215, 153, 33, 0.5);
     border-color: #d79921;
     color: #b57614;
 }
 
-main table tbody td a.voting {
+main table.view tbody td a.voting {
     border-style: solid;
 }
 
-main table tbody td a.non-voting {
+main table.view tbody td a.non-voting {
     border-style: dotted;
 }
 
-main table tfoot td {
+main table.view tfoot td {
     min-width: 10.0em;
     padding: 0.25em;
     text-align: center;
