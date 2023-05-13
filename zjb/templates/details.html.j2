@@ -1,7 +1,7 @@
 {% extends "base.html.j2" %}
 {% block content %}
     <div class="details" id="details-for-{{ result.id }}">
-        <form action="{{ url_prefix }}details?id={{ result.id }}" method="post">
+        <form action="{{ url_for('details', id=result.id) }}" method="post">
             <strong>Result details</strong>
             <table>
                 <tr>

@@ -9,6 +9,7 @@ from flask import render_template
 from flask import request
 from flask import send_file
 from flask import url_for
+from gunicorn.app.base import BaseApplication
 
 from zjb import config
 from zjb import db
@@ -75,7 +76,6 @@ def index():
     return render_template(
         'index.html.j2',
         last_update=last_update,
-        url_prefix=config.url_prefix,
         views=config.views,
     )
 
@@ -98,7 +98,6 @@ def view(name):
         last_update=last_update,
         query=query,
         results=results,
-        url_prefix=config.url_prefix,
     )
 
 
@@ -123,7 +122,6 @@ def details():
         'details.html.j2',
         last_update=last_update,
         result=result,
-        url_prefix=config.url_prefix,
     )
 
 
@@ -132,5 +130,29 @@ def dumpdb():
     return send_file(db.dbfile)
 
 
+class StandaloneApplication(BaseApplication):
+    # From: https://docs.gunicorn.org/en/stable/custom.html
+
+    def __init__(self, app, options=None):
+        self.options = options or {}
+        self.application = app
+        super().__init__()
+
+    def load_config(self):
+        config = {key: value for key, value in self.options.items()
+                  if key in self.cfg.settings and value is not None}
+        for key, value in config.items():
+            self.cfg.set(key.lower(), value)
+
+    def load(self):
+        return self.application
+
+
 def main() -> None:
-    app.run(port=config.app_port)
+    options = {
+        'accesslog': '-',
+        'bind': f'127.0.0.1:{config.app_port}',
+        'reload': True,
+        'workers': 4,
+    }
+    StandaloneApplication(app, options).run()
