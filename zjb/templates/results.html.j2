@@ -9,7 +9,7 @@
             </div>
             <div>
                 <label for="search">Search:</label>
-                <input type="search" name="search" id="search" autocomplete="off" />
+                <input type="search" name="search" id="search" autocomplete="off" value="{% if query %}{{ query }}{% endif %}" />
             </div>
             <div>
                 <label>Quick:</label>
