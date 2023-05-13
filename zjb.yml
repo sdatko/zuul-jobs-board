@@ -14,7 +14,6 @@ app_port: 5333
 db_file: 'zjb.sqlite3'
 obsolete_days: 14
 pull_interval: 21600  # 6 hours ~> pull 4 times a day
-url_prefix: '/'
 
 
 #

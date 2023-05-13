@@ -46,11 +46,11 @@
                         {%- for result in project_results %}
                         <td>
                             {%- if result -%}
-                            <a class="status {{ result.status }} {% if result.voting %}voting{% else %}non-voting{% endif %}" href="{{ url_prefix }}details?id={{ result.id }}">{{ result.status }}{% if result.notes -%}<span class="notes"></span>{%- endif %}</a>
+                            <a class="status {{ result.status }} {% if result.voting %}voting{% else %}non-voting{% endif %}" href="{{ url_for('details', id=result.id) }}">{{ result.status }}{% if result.notes -%}<span class="notes"></span>{%- endif %}</a>
                             <div class="overlay">
                                 <div class="details details-box" id="details-for-{{ result.id }}">
-                                    <form action="{{ url_prefix }}details?id={{ result.id }}" method="post">
-                                        <p class="id"><a href="{{ url_prefix }}details?id={{ result.id }}">#{{ result.id }}</a></p>
+                                    <form action="{{ url_for('details', id=result.id) }}" method="post">
+                                        <p class="id"><a href="{{ url_for('details', id=result.id) }}">#{{ result.id }}</a></p>
                                         <strong>Build details</strong>
                                         <table>
                                             <tr>
