@@ -75,7 +75,13 @@ def details():
 def notes():
     query = request.args.get('q')
 
-    results = db.get_results_with_notes()
+    if request.args.get('missing'):
+        results = db.get_missing_notes()
+    elif request.args.get('obsolete'):
+        results = db.get_obsolete_notes()
+    else:
+        results = db.get_results_with_notes()
+
     last_update = db.get_last_update()
 
     return render_template(
