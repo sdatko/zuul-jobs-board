@@ -7,5 +7,10 @@
                     <li><a href="{{ url_for('view', name=view) }}">{{ view }}</a></li>
                     {%- endfor -%}
                 </ul>
+                <h1>or pick one of the following</h1>
+                <ul>
+                    <li><a href="{{ url_for('notes') }}">Browse notes</a></li>
+                    <li><a href="{{ url_for('dumpdb') }}">Dump database</a></li>
+                </ul>
             </div>
 {% endblock %}
