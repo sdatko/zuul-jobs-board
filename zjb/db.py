@@ -155,6 +155,19 @@ def get_results_for_view(filters: dict) -> dict:
     return results, headers
 
 
+def get_results_with_notes() -> dict:
+    results = []
+
+    with session() as s:
+        for result in (s.query(Build)
+                        .filter(Build.notes.is_not(None))
+                        .order_by(Build.project, Build.branch,
+                                  Build.job, Build.pipeline).all()):
+            results.append(result.__dict__)
+
+    return results
+
+
 def set_notes(ID, text) -> None:
     text = text.strip()
     if not text:
