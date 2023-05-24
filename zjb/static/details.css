@@ -118,6 +118,6 @@ main div.details div span code {
     font-weight: bold;
 }
 
-main div.details div main div.hfill {
+main div.details div div.hfill {
     flex-grow: 100;
 }
