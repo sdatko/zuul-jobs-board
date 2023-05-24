@@ -1,4 +1,12 @@
 {% extends "base.html.j2" %}
+{% block navigation %}
+        <nav>
+            <div>
+                <label for="search">Search:</label>
+                <input type="search" name="search" id="search" autocomplete="off" value="{% if query %}{{ query }}{% endif %}" />
+            </div>
+        </nav>
+{% endblock %}
 {% block content %}
     <table class="notes">
         <thead>
@@ -14,7 +22,7 @@
         </thead>
         <tbody>
         {%- for result in results %}
-            <tr>
+            <tr data-search="{{ result.project }} {{ result.branch }} {{ result.job }} {{ result.piepline }} {{ result.status }} {{ result.notes | e }}">
                 <td>
                     {{ result.project }}
                 </td>
