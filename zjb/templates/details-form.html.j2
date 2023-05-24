@@ -1,0 +1,50 @@
+<form action="{{ url_for('details', id=result.id) }}" method="post">
+    <strong>Result details</strong>
+    <table>
+        <tr>
+            <td>Project:</td>
+            <td><b>{{ result.project }}</b></td>
+            <td>Job name:</td>
+            <td><b>{{ result.job }}</b></td>
+        </tr>
+        <tr>
+            <td>Branch:</td>
+            <td><b>{{ result.branch }}</b></td>
+            <td>Pipeline:</td>
+            <td><b>{{ result.pipeline }}</b></td>
+        </tr>
+        <tr>
+            <td>Status:</td>
+            <td><b class="status {{ result.status }} {% if result.voting %}voting{% else %}non-voting{% endif %}">{{ result.status }}</b></td>
+            <td>Date:</td>
+            <td>{% if result.date %}<b>{{ result.date }}</b>{% else %}(N/A){% endif %}</td>
+        </tr>
+        <tr>
+            <td>UUID:</td>
+            <td>{% if result.uuid %}<b>{{ result.uuid }}</b>{% else %}(N/A){% endif %}</td>
+            <td>Updated:</td>
+            <td><b>{{ result.updated }}</b></td>
+        </tr>
+        <tr>
+            <td>Logs:</td>
+            <td class="log" colspan="3">{% if result.URL %}<a href="{{ result.URL }}">{{ result.URL }}</a>{% else %}(N/A){% endif %}</td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                Notes:<br />
+                <textarea id="notes" name="notes" rows="7" cols="80">{% if result.notes %}{{ result.notes | e }}{% endif %}</textarea>
+            </td>
+        </tr>
+    </table>
+    <div>
+        {% if form_reset_button %}
+        <button type="reset" value="reset">Reset</button>
+        {% endif %}
+        {% if form_cancel_button %}
+        <button type="reset" value="reset">Cancel</button>
+        <span>(or press <code>[ESC]</code> key)</span>
+        {% endif %}
+        <div class="hfill"><!-- --></div>
+        <button type="submit" value="submit">Save</button>
+    </div>
+</form>
