@@ -156,6 +156,10 @@ def get_results_for_view(filters: dict) -> dict:
 
 
 def set_notes(ID, text) -> None:
+    text = text.strip()
+    if not text:
+        text = None
+
     with session() as s:
         s.query(Build).filter(Build.id == ID).update({'notes': text})
         s.commit()
