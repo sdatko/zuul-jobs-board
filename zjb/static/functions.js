@@ -1,5 +1,5 @@
 function set_tables_widths() {
-    let tables = document.querySelectorAll('table.view');
+    let tables = document.querySelectorAll('table.view, table.notes');
     for(const table of tables) {
         table.width = table.offsetWidth;
     }
