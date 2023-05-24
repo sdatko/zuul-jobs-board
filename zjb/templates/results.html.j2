@@ -35,7 +35,7 @@
                 </thead>
                 <tbody>
                     {%- for project_name, project_results in results[pipeline].items() %}
-                    <tr>
+                    <tr data-search="{{ project_name }}{% for result in project_results %} {{ result.status }}{% endfor %}">
                         <td>{{ project_name }}</td>
                         {%- for result in project_results %}
                         <td>
