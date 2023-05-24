@@ -3,14 +3,7 @@ function filter_rows() {
     let rows = document.querySelectorAll('table.view > tbody > tr');
 
     for(const row of rows) {
-        let project = row.firstElementChild.textContent;
-        let text = [project];
-
-        for(const node of row.querySelectorAll('a.status')) {
-            text.push(node.textContent);
-        }
-
-        if(query == '' || text.join(' ').toLowerCase().match(query)) {
+        if(query == '' || row.dataset['search'].toLowerCase().match(query)) {
             row.style.display = '';
         } else {
             row.style.display = 'none';
