@@ -1,6 +1,6 @@
 function save_notes(event) {
     const formdata = new FormData(event.target);
-    const text = formdata.get('notes');
+    const text = formdata.get('notes').trim();
     const url = event.target.action;
 
     fetch(url, {
@@ -15,7 +15,8 @@ function save_notes(event) {
             overlay.classList.remove('visible');
 
             let textarea = event.target.querySelector('textarea');
-            textarea.innerHTML = text;
+            textarea.innerHTML = text;  // Value for the [reset] button
+            textarea.value = text;  // Content visible in the form
 
             let status = overlay.previousElementSibling;
             let icon = status.querySelector('span.notes');
