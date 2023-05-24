@@ -19,14 +19,31 @@ function save_notes(event) {
             textarea.value = text;  // Content visible in the form
 
             let status = overlay.previousElementSibling;
-            let icon = status.querySelector('span.notes');
 
-            if(text && !icon) {
-                let icon = document.createElement('span');
-                icon.className = 'notes';
-                status.appendChild(icon);
-            } else if(!text && icon) {
-                status.removeChild(icon);
+            // For views subpage
+            if(status.classList.contains('status')) {
+                let icon = status.querySelector('span.notes');
+
+                if(text && !icon) {
+                    let icon = document.createElement('span');
+                    icon.className = 'notes';
+                    status.appendChild(icon);
+                } else if(!text && icon) {
+                    status.removeChild(icon);
+                }
+            }
+
+            // For notes subpage
+            if(status.classList.contains('edit')) {
+                let prevtd = status.parentElement.previousElementSibling;
+
+                if(prevtd.classList.contains('text')) {
+                    if(text) {
+                        prevtd.textContent = text;
+                    } else {
+                        prevtd.innerHTML = '<i style="color: red;">/ Deleted /</i>';
+                    }
+                }
             }
         } else {
             console.error('Response not ok', response);
@@ -49,7 +66,9 @@ function close_notes(event) {
 }
 
 function bind_events_to_forms() {
-    let forms = document.querySelectorAll('main table div.details form');
+    let forms = document.querySelectorAll(
+        'main table.view div.details form, main table.notes div.details form'
+    );
     for(const form of forms) {
         form.addEventListener('submit', save_notes);
         form.addEventListener('reset', close_notes);

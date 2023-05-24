@@ -16,7 +16,9 @@ function close_overlay() {
 }
 
 function bind_links_to_overlays() {
-    let links = document.querySelectorAll('main table td a.status');
+    let links = document.querySelectorAll(
+        'main table.view td a.status, main table.notes td a.edit'
+    );
     for(const link of links) {
         link.addEventListener('click', open_overlay);
     }
