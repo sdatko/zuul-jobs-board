@@ -1,6 +1,8 @@
 function filter_rows() {
     let query = document.getElementById('search').value.toLowerCase();
-    let rows = document.querySelectorAll('table.view > tbody > tr');
+    let rows = document.querySelectorAll(
+        'table.view > tbody > tr, table.notes > tbody > tr'
+    );
 
     for(const row of rows) {
         if(query == '' || row.dataset['search'].toLowerCase().match(query)) {

@@ -73,12 +73,15 @@ def details():
 
 @app.route("/notes", methods=['GET'])
 def notes():
+    query = request.args.get('q')
+
     results = db.get_results_with_notes()
     last_update = db.get_last_update()
 
     return render_template(
         'notes.html.j2',
         last_update=last_update,
+        query=query,
         results=results,
     )
 
