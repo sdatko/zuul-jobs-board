@@ -1,7 +1,4 @@
-// const GROUPS = {};
-
 function filter_rows() {
-    let group = document.getElementById('group').value;
     let query = document.getElementById('search').value.toLowerCase();
     let rows = document.querySelectorAll('table.view > tbody > tr');
 
@@ -13,11 +10,7 @@ function filter_rows() {
             text.push(node.textContent);
         }
 
-        if(
-           (group == 'ANY' || (group in GROUPS && GROUPS[group].includes(project)))
-           &&
-           (query == '' || text.join(' ').toLowerCase().match(query))
-        ) {
+        if(query == '' || text.join(' ').toLowerCase().match(query)) {
             row.style.display = '';
         } else {
             row.style.display = 'none';

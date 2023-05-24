@@ -42,5 +42,4 @@ pull_interval = CONFIG.get('pull_interval')
 api_url = CONFIG.get('api_url')
 api_tenant = CONFIG.get('api_tenant')
 
-groups = CONFIG.get('groups')
 views = CONFIG.get('views')

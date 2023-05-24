@@ -11,12 +11,8 @@ nav label {
     cursor: pointer;
 }
 
-nav select {
-    width: 10.0em;
-}
-
 nav input#search {
-    width: 18.0em;
+    width: 25.0em;
 }
 
 nav input#failed {

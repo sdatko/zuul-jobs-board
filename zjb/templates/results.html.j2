@@ -2,12 +2,6 @@
 {% block navigation %}
         <nav>
             <div>
-                <label for="group">Group:</label>
-                <select name="group" id="group">
-                    <option>ANY</option>
-                </select>
-            </div>
-            <div>
                 <label for="search">Search:</label>
                 <input type="search" name="search" id="search" autocomplete="off" value="{% if query %}{{ query }}{% endif %}" />
             </div>

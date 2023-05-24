@@ -46,9 +46,3 @@ views:
       stable/wallaby:
         - openstack-tox-pep8
         - openstack-tox-py38
-
-
-#
-# Output groups
-#
-groups: ~
