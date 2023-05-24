@@ -40,6 +40,7 @@ function save_notes(event) {
                 if(prevtd.classList.contains('text')) {
                     if(text) {
                         prevtd.textContent = text;
+                        prevtd.setAttribute('title', text);
                     } else {
                         prevtd.innerHTML = '<i style="color: red;">/ Deleted /</i>';
                     }
