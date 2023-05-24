@@ -17,9 +17,6 @@
         <script src="{{ url_for('static', filename='overlay.js') }}"></script>
         <script src="{{ url_for('static', filename='toast.js') }}"></script>
         <script src="{{ url_for('static', filename='functions.js') }}"></script>
-        <script>
-            const GROUPS = {% if groups %}{{ groups }}{% else %}{}{% endif %};
-        </script>
     </head>
     <body>
         <header>

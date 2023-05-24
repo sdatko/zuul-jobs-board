@@ -40,7 +40,6 @@ def view(name):
     return render_template(
         'results.html.j2',
         name=name,
-        groups=config.groups,
         headers=headers,
         last_update=last_update,
         query=query,
