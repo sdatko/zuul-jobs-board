@@ -9,7 +9,9 @@
                 </ul>
                 <h1>or pick one of the following</h1>
                 <ul>
-                    <li><a href="{{ url_for('notes') }}">Browse notes</a></li>
+                    <li><a href="{{ url_for('notes') }}">Browse current notes</a></li>
+                    <li><a href="{{ url_for('notes', missing=True) }}">Show results with missing notes</a></li>
+                    <li><a href="{{ url_for('notes', obsolete=True) }}">Show possibly obsolete notes</a></li>
                     <li><a href="{{ url_for('dumpdb') }}">Dump database</a></li>
                 </ul>
             </div>
