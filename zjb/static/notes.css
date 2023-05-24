@@ -1,0 +1,117 @@
+main table.notes {
+    border: 1px solid #000;
+    border-collapse: separate;
+    border-radius: 0.25em;
+    border-spacing: 0.1em;
+    margin: 0 auto;
+    padding: 0.5em;
+}
+
+main table.notes thead th {
+    border-bottom: 3px double #000;
+    border-left: 1px dotted #000;
+    border-right: 1px dotted #000;
+    padding: 0.25em 1.0em;
+    text-align: center;
+}
+
+main table.notes thead td:first-child,
+main table.notes thead th:first-child {
+    border-left: 0;
+}
+
+main table.notes thead td:last-child,
+main table.notes thead th:last-child {
+    border-right: 0;
+}
+
+main table.notes thead:after {
+    content: '';
+    display: block;
+    margin-top: 0.25em;
+}
+
+main table.notes > tbody > tr:nth-child(even) {
+    background-color: #eeeeee;
+}
+
+main table.notes tbody td {
+    overflow: hidden;
+    padding: 0.25em 1.0em;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+main table.notes tbody td span.notes {
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 0.1em;
+    top: auto;
+    bottom: auto;
+}
+
+main table.notes tbody td span.notes:before {
+    content: '📝';
+}
+
+main table.notes tbody td b.status {
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 0.25em;
+    display: inline-block;
+    font-weight: bold;
+    min-width: 7.0em;
+    padding: 0 0.5em;
+    text-align: center;
+
+    background-color: rgba(146, 131, 116, 0.5);
+    border-color: #928374;
+    color: #7c6f64;
+}
+
+main table.notes tbody td b.SUCCESS {
+    background-color: rgba(152, 151, 26, 0.5);
+    border-color: #98971a;
+    color: #79740e;
+}
+
+main table.notes tbody td b.FAILURE {
+    background-color: rgba(204, 36, 29, 0.5);
+    border-color: #cc241d;
+    color: #9d0006;
+}
+
+main table.notes tbody td b.ABORTED,
+main table.notes tbody td b.NODE_FAILURE,
+main table.notes tbody td b.RETRY,
+main table.notes tbody td b.RETRY_LIMIT {
+    background-color: rgba(215, 153, 33, 0.5);
+    border-color: #d79921;
+    color: #b57614;
+}
+
+main table.notes tbody td b.voting {
+    border-style: solid;
+}
+
+main table.notes tbody td b.non-voting {
+    border-style: dotted;
+}
+
+main table.notes tbody td.text {
+    font-family: monospace;
+    font-size: 80%;
+    margin: 0;
+    min-width: 5.0em;
+    max-width: 20.0em;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+main p.notes-summary {
+    text-align: center;
+}

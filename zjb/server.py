@@ -71,6 +71,18 @@ def details():
     )
 
 
+@app.route("/notes", methods=['GET'])
+def notes():
+    results = db.get_results_with_notes()
+    last_update = db.get_last_update()
+
+    return render_template(
+        'notes.html.j2',
+        last_update=last_update,
+        results=results,
+    )
+
+
 @app.route("/zjb.sqlite3", methods=['GET'])
 def dumpdb():
     return send_file(db.dbfile)

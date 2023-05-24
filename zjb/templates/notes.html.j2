@@ -1,0 +1,44 @@
+{% extends "base.html.j2" %}
+{% block content %}
+    <table class="notes">
+        <thead>
+            <tr>
+                <th>Project</th>
+                <th>Branch</th>
+                <th>Job</th>
+                <th>Pipeline</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {%- for result in results %}
+            <tr>
+                <td>
+                    {{ result.project }}
+                </td>
+                <td>
+                    {{ result.branch }}
+                </td>
+                <td>
+                    {{ result.job }}
+                </td>
+                <td>
+                    {{ result.pipeline }}
+                </td>
+                <td>
+                <b class="status {{ result.status }} {% if result.voting %}voting{% else %}non-voting{% endif %}">{{ result.status }}</b>
+                </td>
+                <td class="text" title="{{ result.notes | e | replace('\n', '&#10;') }}">
+                    {{ result.notes | e }}
+                </td>
+                <td>
+                    <a class="edit" href="{{ url_for('details', id=result.id) }}">[Edit]</a>
+                </td>
+            </tr>
+        {%- endfor -%}
+        </tbody>
+    </table>
+    <p class="notes-summary">Total: {{ results | length }}</p>
+{% endblock %}
