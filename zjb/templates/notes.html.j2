@@ -43,6 +43,13 @@
                 </td>
                 <td>
                     <a class="edit" href="{{ url_for('details', id=result.id) }}">[Edit]</a>
+                    <div class="overlay">
+                        <div class="details details-box" id="details-for-{{ result.id }}">
+                            {% with form_cancel_button=True %}
+                            {% include 'details-form.html.j2' %}
+                            {% endwith %}
+                        </div>
+                    </div>
                 </td>
             </tr>
         {%- endfor -%}
