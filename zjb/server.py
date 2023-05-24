@@ -72,7 +72,7 @@ def details():
     )
 
 
-@app.route("/db.sqlite3", methods=['GET'])
+@app.route("/zjb.sqlite3", methods=['GET'])
 def dumpdb():
     return send_file(db.dbfile)
 
